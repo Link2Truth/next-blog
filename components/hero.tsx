@@ -2,13 +2,15 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { NavBar } from "@/components/nav-bar";
 import { WordRotate } from "@/components/magicui/word-rotate";
 import { AuroraText } from "@/components/magicui/aurora-text";
 import { motion } from "motion/react";
 
 export function Hero() {
   return (
-    <section className="py-16 sm:py-20 md:py-24 relative overflow-hidden">
+    <section className="py-16 sm:py-20 md:py-24 relative">
+      <NavBar />
       {/* 背景装饰元素 */}
       <motion.div
         className="absolute top-20 left-10 w-16 h-16 rounded-full bg-blue-500/10 dark:bg-blue-400/20 z-0"
@@ -45,7 +47,10 @@ export function Hero() {
               transition={{ duration: 0.6 }}
               className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight mb-6 text-foreground"
             >
-              欢迎来到 <AuroraText>我的博客</AuroraText>
+              欢迎来到{" "}
+              <AuroraText className="text-4xl sm:text-5xl lg:text-6xl">
+                我的博客
+              </AuroraText>
             </motion.h1>
             <motion.div
               initial={{ opacity: 0 }}
