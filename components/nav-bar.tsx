@@ -1,33 +1,37 @@
-import Link from "next/link"
-import { Code2, User } from "lucide-react"
-import { ThemeSwitch } from "@/components/theme-switch"
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
-import { useState, useRef, useEffect } from "react"
-import { motion } from "motion/react"
+import Link from "next/link";
+import { Code2, User } from "lucide-react";
+import { ThemeSwitch } from "@/components/theme-switch";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { useState, useRef, useEffect } from "react";
+import { motion } from "motion/react";
 
 const navLinks = [
   { href: "/", label: "首页" },
   { href: "/blog", label: "博客" },
   { href: "/contact", label: "联系" },
   { href: "/about", label: "关于" },
-]
+];
 
 export function NavBar() {
-  const navItemsRef = useRef<Array<HTMLLIElement | null>>([])
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
-  const [dimensions, setDimensions] = useState({ width: 0, height: 0, left: 0 })
+  const navItemsRef = useRef<Array<HTMLLIElement | null>>([]);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [dimensions, setDimensions] = useState({
+    width: 0,
+    height: 0,
+    left: 0,
+  });
 
   // 根据鼠标位置，更新元素尺寸和位置
   useEffect(() => {
     if (hoveredIndex !== null && navItemsRef.current[hoveredIndex]) {
-      const currentItem = navItemsRef.current[hoveredIndex]
+      const currentItem = navItemsRef.current[hoveredIndex];
       setDimensions({
         width: currentItem?.offsetWidth || 0,
         height: currentItem?.offsetHeight || 0,
         left: currentItem?.offsetLeft || 0,
-      })
+      });
     }
-  }, [hoveredIndex])
+  }, [hoveredIndex]);
 
   return (
     <motion.nav
@@ -69,7 +73,7 @@ export function NavBar() {
             <li
               key={link.href}
               ref={(el) => {
-                navItemsRef.current[index] = el
+                navItemsRef.current[index] = el;
               }}
               className="mx-2"
               onMouseEnter={() => setHoveredIndex(index)}
@@ -99,5 +103,5 @@ export function NavBar() {
         </Link>
       </div>
     </motion.nav>
-  )
+  );
 }
