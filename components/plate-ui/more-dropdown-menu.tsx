@@ -1,21 +1,21 @@
-'use client';
+"use client";
 
-import React from 'react';
+import React from "react";
 
-import type { DropdownMenuProps } from '@radix-ui/react-dropdown-menu';
+import type { DropdownMenuProps } from "@radix-ui/react-dropdown-menu";
 
 import {
   SubscriptPlugin,
   SuperscriptPlugin,
-} from '@udecode/plate-basic-marks/react';
-import { KbdPlugin } from '@udecode/plate-kbd/react';
-import { useEditorRef } from '@udecode/plate/react';
+} from "@udecode/plate-basic-marks/react";
+import { KbdPlugin } from "@udecode/plate-kbd/react";
+import { useEditorRef } from "@udecode/plate/react";
 import {
   KeyboardIcon,
   MoreHorizontalIcon,
   SubscriptIcon,
   SuperscriptIcon,
-} from 'lucide-react';
+} from "lucide-react";
 
 import {
   DropdownMenu,
@@ -24,8 +24,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
   useOpenState,
-} from './dropdown-menu';
-import { ToolbarButton } from './toolbar';
+} from "./dropdown-menu";
+import { ToolbarButton } from "./toolbar";
 
 export function MoreDropdownMenu(props: DropdownMenuProps) {
   const editor = useEditorRef();
@@ -34,7 +34,7 @@ export function MoreDropdownMenu(props: DropdownMenuProps) {
   return (
     <DropdownMenu modal={false} {...openState} {...props}>
       <DropdownMenuTrigger asChild>
-        <ToolbarButton pressed={openState.open} tooltip="Insert">
+        <ToolbarButton pressed={openState.open} tooltip="更多">
           <MoreHorizontalIcon />
         </ToolbarButton>
       </DropdownMenuTrigger>
@@ -47,12 +47,12 @@ export function MoreDropdownMenu(props: DropdownMenuProps) {
           <DropdownMenuItem
             onSelect={() => {
               editor.tf.toggleMark(KbdPlugin.key);
-              editor.tf.collapse({ edge: 'end' });
+              editor.tf.collapse({ edge: "end" });
               editor.tf.focus();
             }}
           >
             <KeyboardIcon />
-            Keyboard input
+            键盘
           </DropdownMenuItem>
 
           <DropdownMenuItem
@@ -64,7 +64,7 @@ export function MoreDropdownMenu(props: DropdownMenuProps) {
             }}
           >
             <SuperscriptIcon />
-            Superscript
+            上标
             {/* (⌘+,) */}
           </DropdownMenuItem>
           <DropdownMenuItem
@@ -76,7 +76,7 @@ export function MoreDropdownMenu(props: DropdownMenuProps) {
             }}
           >
             <SubscriptIcon />
-            Subscript
+            下标
             {/* (⌘+.) */}
           </DropdownMenuItem>
         </DropdownMenuGroup>

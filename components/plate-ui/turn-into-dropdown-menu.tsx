@@ -1,19 +1,19 @@
-'use client';
+"use client";
 
-import React from 'react';
+import React from "react";
 
-import type { DropdownMenuProps } from '@radix-ui/react-dropdown-menu';
+import type { DropdownMenuProps } from "@radix-ui/react-dropdown-menu";
 
-import { BlockquotePlugin } from '@udecode/plate-block-quote/react';
-import { CodeBlockPlugin } from '@udecode/plate-code-block/react';
-import { HEADING_KEYS } from '@udecode/plate-heading';
-import { INDENT_LIST_KEYS, ListStyleType } from '@udecode/plate-indent-list';
-import { TogglePlugin } from '@udecode/plate-toggle/react';
+import { BlockquotePlugin } from "@udecode/plate-block-quote/react";
+import { CodeBlockPlugin } from "@udecode/plate-code-block/react";
+import { HEADING_KEYS } from "@udecode/plate-heading";
+import { INDENT_LIST_KEYS, ListStyleType } from "@udecode/plate-indent-list";
+import { TogglePlugin } from "@udecode/plate-toggle/react";
 import {
   ParagraphPlugin,
   useEditorRef,
   useSelectionFragmentProp,
-} from '@udecode/plate/react';
+} from "@udecode/plate/react";
 import {
   ChevronRightIcon,
   Columns3Icon,
@@ -26,13 +26,13 @@ import {
   PilcrowIcon,
   QuoteIcon,
   SquareIcon,
-} from 'lucide-react';
+} from "lucide-react";
 
 import {
   getBlockType,
   setBlockType,
   STRUCTURAL_TYPES,
-} from '@/components/editor/transforms';
+} from "@/components/editor/transforms";
 
 import {
   DropdownMenu,
@@ -41,74 +41,74 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
   useOpenState,
-} from './dropdown-menu';
-import { ToolbarButton } from './toolbar';
+} from "./dropdown-menu";
+import { ToolbarButton } from "./toolbar";
 
 const turnIntoItems = [
   {
     icon: <PilcrowIcon />,
-    keywords: ['paragraph'],
-    label: 'Text',
+    keywords: ["paragraph"],
+    label: "段落",
     value: ParagraphPlugin.key,
   },
   {
     icon: <Heading1Icon />,
-    keywords: ['title', 'h1'],
-    label: 'Heading 1',
+    keywords: ["title", "h1"],
+    label: "标题 1",
     value: HEADING_KEYS.h1,
   },
   {
     icon: <Heading2Icon />,
-    keywords: ['subtitle', 'h2'],
-    label: 'Heading 2',
+    keywords: ["subtitle", "h2"],
+    label: "标题 2",
     value: HEADING_KEYS.h2,
   },
   {
     icon: <Heading3Icon />,
-    keywords: ['subtitle', 'h3'],
-    label: 'Heading 3',
+    keywords: ["subtitle", "h3"],
+    label: "标题 3",
     value: HEADING_KEYS.h3,
   },
   {
     icon: <ListIcon />,
-    keywords: ['unordered', 'ul', '-'],
-    label: 'Bulleted list',
+    keywords: ["unordered", "ul", "-"],
+    label: "无序列表",
     value: ListStyleType.Disc,
   },
   {
     icon: <ListOrderedIcon />,
-    keywords: ['ordered', 'ol', '1'],
-    label: 'Numbered list',
+    keywords: ["ordered", "ol", "1"],
+    label: "有序列表",
     value: ListStyleType.Decimal,
   },
   {
     icon: <SquareIcon />,
-    keywords: ['checklist', 'task', 'checkbox', '[]'],
-    label: 'To-do list',
+    keywords: ["checklist", "task", "checkbox", "[]"],
+    label: "待办列表",
     value: INDENT_LIST_KEYS.todo,
   },
   {
     icon: <ChevronRightIcon />,
-    keywords: ['collapsible', 'expandable'],
-    label: 'Toggle list',
+    keywords: ["collapsible", "expandable"],
+    label: "折叠列表",
     value: TogglePlugin.key,
   },
   {
     icon: <FileCodeIcon />,
-    keywords: ['```'],
-    label: 'Code',
+    keywords: ["```"],
+    label: "代码块",
     value: CodeBlockPlugin.key,
   },
   {
     icon: <QuoteIcon />,
-    keywords: ['citation', 'blockquote', '>'],
-    label: 'Quote',
+    keywords: ["citation", "blockquote", ">"],
+    label: "引用",
     value: BlockquotePlugin.key,
   },
   {
     icon: <Columns3Icon />,
-    label: '3 columns',
-    value: 'action_three_columns',
+    label: "三栏布局",
+    value: "action_three_columns",
   },
 ];
 
@@ -133,9 +133,9 @@ export function TurnIntoDropdownMenu(props: DropdownMenuProps) {
     <DropdownMenu modal={false} {...openState} {...props}>
       <DropdownMenuTrigger asChild>
         <ToolbarButton
-          className="min-w-[125px]"
+          className="min-w-[100px]"
           pressed={openState.open}
-          tooltip="Turn into"
+          tooltip="转换格式"
           isDropdown
         >
           {selectedItem.label}
@@ -155,12 +155,12 @@ export function TurnIntoDropdownMenu(props: DropdownMenuProps) {
           onValueChange={(type) => {
             setBlockType(editor, type);
           }}
-          label="Turn into"
+          label="转换为"
         >
           {turnIntoItems.map(({ icon, label, value: itemValue }) => (
             <DropdownMenuRadioItem
               key={itemValue}
-              className="min-w-[180px]"
+              className="min-w-[120px]"
               value={itemValue}
             >
               {icon}

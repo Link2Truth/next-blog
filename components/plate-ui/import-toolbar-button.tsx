@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import React from 'react';
+import React from "react";
 
-import type { DropdownMenuProps } from '@radix-ui/react-dropdown-menu';
+import type { DropdownMenuProps } from "@radix-ui/react-dropdown-menu";
 
-import { getEditorDOMFromHtmlString } from '@udecode/plate';
-import { MarkdownPlugin } from '@udecode/plate-markdown';
-import { useEditorRef } from '@udecode/plate/react';
-import { ArrowUpToLineIcon } from 'lucide-react';
-import { useFilePicker } from 'use-file-picker';
+import { getEditorDOMFromHtmlString } from "@udecode/plate";
+import { MarkdownPlugin } from "@udecode/plate-markdown";
+import { useEditorRef } from "@udecode/plate/react";
+import { ArrowUpToLineIcon } from "lucide-react";
+import { useFilePicker } from "use-file-picker";
 
 import {
   DropdownMenu,
@@ -17,20 +17,20 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
   useOpenState,
-} from './dropdown-menu';
-import { ToolbarButton } from './toolbar';
+} from "./dropdown-menu";
+import { ToolbarButton } from "./toolbar";
 
-type ImportType = 'html' | 'markdown';
+type ImportType = "html" | "markdown";
 
 export function ImportToolbarButton({ children, ...props }: DropdownMenuProps) {
   const editor = useEditorRef();
   const openState = useOpenState();
 
-  const [type, setType] = React.useState<ImportType>('html');
-  const accept = type === 'html' ? ['text/html'] : ['.md'];
+  const [type, setType] = React.useState<ImportType>("html");
+  const accept = type === "html" ? ["text/html"] : [".md"];
 
   const getFileNodes = (text: string, type: ImportType) => {
-    if (type === 'html') {
+    if (type === "html") {
       const editorNode = getEditorDOMFromHtmlString(text);
       const nodes = editor.api.html.deserialize({
         element: editorNode,
@@ -59,7 +59,7 @@ export function ImportToolbarButton({ children, ...props }: DropdownMenuProps) {
   return (
     <DropdownMenu modal={false} {...openState} {...props}>
       <DropdownMenuTrigger asChild>
-        <ToolbarButton pressed={openState.open} tooltip="Import" isDropdown>
+        <ToolbarButton pressed={openState.open} tooltip="导入" isDropdown>
           <ArrowUpToLineIcon className="size-4" />
         </ToolbarButton>
       </DropdownMenuTrigger>
@@ -68,20 +68,20 @@ export function ImportToolbarButton({ children, ...props }: DropdownMenuProps) {
         <DropdownMenuGroup>
           <DropdownMenuItem
             onSelect={() => {
-              setType('html');
+              setType("html");
               openFilePicker();
             }}
           >
-            Import from HTML
+            From HTML
           </DropdownMenuItem>
 
           <DropdownMenuItem
             onSelect={() => {
-              setType('markdown');
+              setType("markdown");
               openFilePicker();
             }}
           >
-            Import from Markdown
+            From Markdown
           </DropdownMenuItem>
         </DropdownMenuGroup>
       </DropdownMenuContent>

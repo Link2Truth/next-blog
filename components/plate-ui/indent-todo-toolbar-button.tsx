@@ -1,21 +1,21 @@
-'use client';
+"use client";
 
-import { withRef } from '@udecode/cn';
+import { withRef } from "@udecode/cn";
 import {
   useIndentTodoToolBarButton,
   useIndentTodoToolBarButtonState,
-} from '@udecode/plate-indent-list/react';
-import { ListTodoIcon } from 'lucide-react';
+} from "@udecode/plate-indent-list/react";
+import { ListTodoIcon } from "lucide-react";
 
-import { ToolbarButton } from './toolbar';
+import { ToolbarButton } from "./toolbar";
 
 export const IndentTodoToolbarButton = withRef<typeof ToolbarButton>(
   (rest, ref) => {
-    const state = useIndentTodoToolBarButtonState({ nodeType: 'todo' });
+    const state = useIndentTodoToolBarButtonState({ nodeType: "todo" });
     const { props } = useIndentTodoToolBarButton(state);
 
     return (
-      <ToolbarButton ref={ref} tooltip="Todo" {...props} {...rest}>
+      <ToolbarButton ref={ref} tooltip="待办列表" {...props} {...rest}>
         <ListTodoIcon />
       </ToolbarButton>
     );
