@@ -1,23 +1,23 @@
-'use client';
+"use client";
 
-import { useCallback, useState } from 'react';
+import { useCallback, useState } from "react";
 
-import { AIChatPlugin } from '@udecode/plate-ai/react';
-import { BlockquotePlugin } from '@udecode/plate-block-quote/react';
-import { HEADING_KEYS } from '@udecode/plate-heading';
-import { IndentListPlugin } from '@udecode/plate-indent-list/react';
+import { AIChatPlugin } from "@udecode/plate-ai/react";
+import { BlockquotePlugin } from "@udecode/plate-block-quote/react";
+import { HEADING_KEYS } from "@udecode/plate-heading";
+import { IndentListPlugin } from "@udecode/plate-indent-list/react";
 import {
   BLOCK_CONTEXT_MENU_ID,
   BlockMenuPlugin,
   BlockSelectionPlugin,
-} from '@udecode/plate-selection/react';
+} from "@udecode/plate-selection/react";
 import {
   ParagraphPlugin,
   useEditorPlugin,
   usePlateState,
-} from '@udecode/plate/react';
+} from "@udecode/plate/react";
 
-import { useIsTouchDevice } from '@/hooks/use-is-touch-device';
+import { useIsTouchDevice } from "@/hooks/use-is-touch-device";
 
 import {
   ContextMenu,
@@ -28,15 +28,15 @@ import {
   ContextMenuSubContent,
   ContextMenuSubTrigger,
   ContextMenuTrigger,
-} from './context-menu';
+} from "./context-menu";
 
-type Value = 'askAI' | null;
+type Value = "askAI" | null;
 
 export function BlockContextMenu({ children }: { children: React.ReactNode }) {
   const { api, editor } = useEditorPlugin(BlockMenuPlugin);
   const [value, setValue] = useState<Value>(null);
   const isTouch = useIsTouchDevice();
-  const [readOnly] = usePlateState('readOnly');
+  const [readOnly] = usePlateState("readOnly");
 
   const handleTurnInto = useCallback(
     (type: string) => {
@@ -45,7 +45,7 @@ export function BlockContextMenu({ children }: { children: React.ReactNode }) {
         .blockSelection.getNodes()
         .forEach(([node, path]) => {
           if (node[IndentListPlugin.key]) {
-            editor.tf.unsetNodes([IndentListPlugin.key, 'indent'], {
+            editor.tf.unsetNodes([IndentListPlugin.key, "indent"], {
               at: path,
             });
           }
@@ -57,7 +57,7 @@ export function BlockContextMenu({ children }: { children: React.ReactNode }) {
   );
 
   const handleAlign = useCallback(
-    (align: 'center' | 'left' | 'right') => {
+    (align: "center" | "left" | "right") => {
       editor
         .getTransforms(BlockSelectionPlugin)
         .blockSelection.setNodes({ align });
@@ -86,7 +86,7 @@ export function BlockContextMenu({ children }: { children: React.ReactNode }) {
         onContextMenu={(event) => {
           const dataset = (event.target as HTMLElement).dataset;
 
-          const disabled = dataset?.slateEditor === 'true' || readOnly;
+          const disabled = dataset?.slateEditor === "true" || readOnly;
 
           if (disabled) return event.preventDefault();
 
@@ -99,12 +99,12 @@ export function BlockContextMenu({ children }: { children: React.ReactNode }) {
         <div className="w-full">{children}</div>
       </ContextMenuTrigger>
       <ContextMenuContent
-        className="w-64"
+        className="w-30"
         onCloseAutoFocus={(e) => {
           e.preventDefault();
           editor.getApi(BlockSelectionPlugin).blockSelection.focus();
 
-          if (value === 'askAI') {
+          if (value === "askAI") {
             editor.getApi(AIChatPlugin).aiChat.show();
           }
 
@@ -114,10 +114,10 @@ export function BlockContextMenu({ children }: { children: React.ReactNode }) {
         <ContextMenuGroup>
           <ContextMenuItem
             onClick={() => {
-              setValue('askAI');
+              setValue("askAI");
             }}
           >
-            Ask AI
+            AI
           </ContextMenuItem>
           <ContextMenuItem
             onClick={() => {
@@ -127,7 +127,7 @@ export function BlockContextMenu({ children }: { children: React.ReactNode }) {
               editor.tf.focus();
             }}
           >
-            Delete
+            删除
           </ContextMenuItem>
           <ContextMenuItem
             onClick={() => {
@@ -136,31 +136,31 @@ export function BlockContextMenu({ children }: { children: React.ReactNode }) {
                 .blockSelection.duplicate();
             }}
           >
-            Duplicate
+            复制
             {/* <ContextMenuShortcut>⌘ + D</ContextMenuShortcut> */}
           </ContextMenuItem>
           <ContextMenuSub>
-            <ContextMenuSubTrigger>Turn into</ContextMenuSubTrigger>
-            <ContextMenuSubContent className="w-48">
+            <ContextMenuSubTrigger>转换为</ContextMenuSubTrigger>
+            <ContextMenuSubContent className="w-30">
               <ContextMenuItem
                 onClick={() => handleTurnInto(ParagraphPlugin.key)}
               >
-                Paragraph
+                段落
               </ContextMenuItem>
 
               <ContextMenuItem onClick={() => handleTurnInto(HEADING_KEYS.h1)}>
-                Heading 1
+                标题 1
               </ContextMenuItem>
               <ContextMenuItem onClick={() => handleTurnInto(HEADING_KEYS.h2)}>
-                Heading 2
+                标题 2
               </ContextMenuItem>
               <ContextMenuItem onClick={() => handleTurnInto(HEADING_KEYS.h3)}>
-                Heading 3
+                标题 3
               </ContextMenuItem>
               <ContextMenuItem
                 onClick={() => handleTurnInto(BlockquotePlugin.key)}
               >
-                Blockquote
+                引用
               </ContextMenuItem>
             </ContextMenuSubContent>
           </ContextMenuSub>
@@ -174,7 +174,7 @@ export function BlockContextMenu({ children }: { children: React.ReactNode }) {
                 .blockSelection.setIndent(1)
             }
           >
-            Indent
+            添加缩进
           </ContextMenuItem>
           <ContextMenuItem
             onClick={() =>
@@ -183,19 +183,19 @@ export function BlockContextMenu({ children }: { children: React.ReactNode }) {
                 .blockSelection.setIndent(-1)
             }
           >
-            Outdent
+            减少缩进
           </ContextMenuItem>
           <ContextMenuSub>
-            <ContextMenuSubTrigger>Align</ContextMenuSubTrigger>
-            <ContextMenuSubContent className="w-48">
-              <ContextMenuItem onClick={() => handleAlign('left')}>
-                Left
+            <ContextMenuSubTrigger>对齐</ContextMenuSubTrigger>
+            <ContextMenuSubContent className="w-30">
+              <ContextMenuItem onClick={() => handleAlign("left")}>
+                靠左
               </ContextMenuItem>
-              <ContextMenuItem onClick={() => handleAlign('center')}>
-                Center
+              <ContextMenuItem onClick={() => handleAlign("center")}>
+                居中
               </ContextMenuItem>
-              <ContextMenuItem onClick={() => handleAlign('right')}>
-                Right
+              <ContextMenuItem onClick={() => handleAlign("right")}>
+                靠右
               </ContextMenuItem>
             </ContextMenuSubContent>
           </ContextMenuSub>
