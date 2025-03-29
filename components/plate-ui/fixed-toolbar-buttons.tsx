@@ -4,22 +4,15 @@ import React from "react";
 
 import {
   BoldPlugin,
-  CodePlugin,
   ItalicPlugin,
   StrikethroughPlugin,
   UnderlinePlugin,
 } from "@udecode/plate-basic-marks/react";
+import { KbdPlugin } from "@udecode/plate-kbd/react";
 import {
   FontBackgroundColorPlugin,
   FontColorPlugin,
 } from "@udecode/plate-font/react";
-import { HighlightPlugin } from "@udecode/plate-highlight/react";
-import {
-  AudioPlugin,
-  FilePlugin,
-  ImagePlugin,
-  VideoPlugin,
-} from "@udecode/plate-media/react";
 import { useEditorReadOnly } from "@udecode/plate/react";
 import {
   ArrowUpToLineIcon,
@@ -28,14 +21,12 @@ import {
   Code2Icon,
   HighlighterIcon,
   ItalicIcon,
-  PaintBucketIcon,
   StrikethroughIcon,
   UnderlineIcon,
   WandSparklesIcon,
 } from "lucide-react";
 
-import { MoreDropdownMenu } from "@/components/plate-ui/more-dropdown-menu";
-
+import { SuperscriptSubscriptDropdownMenu } from "@/components/plate-ui/superscript-subscript-dropdown-menu";
 import { AIToolbarButton } from "./ai-toolbar-button";
 import { AlignDropdownMenu } from "./align-dropdown-menu";
 import { ColorDropdownMenu } from "./color-dropdown-menu";
@@ -53,12 +44,8 @@ import { IndentTodoToolbarButton } from "./indent-todo-toolbar-button";
 import { IndentToolbarButton } from "./indent-toolbar-button";
 import { InsertDropdownMenu } from "./insert-dropdown-menu";
 import { LineHeightDropdownMenu } from "./line-height-dropdown-menu";
-import { LinkToolbarButton } from "./link-toolbar-button";
 import { MarkToolbarButton } from "./mark-toolbar-button";
-import { MediaToolbarButton } from "./media-toolbar-button";
-import { ModeDropdownMenu } from "./mode-dropdown-menu";
 import { OutdentToolbarButton } from "./outdent-toolbar-button";
-import { TableDropdownMenu } from "./table-dropdown-menu";
 import { ToggleToolbarButton } from "./toggle-toolbar-button";
 import { ToolbarGroup } from "./toolbar";
 import { TurnIntoDropdownMenu } from "./turn-into-dropdown-menu";
@@ -67,30 +54,22 @@ export function FixedToolbarButtons() {
   const readOnly = useEditorReadOnly();
 
   return (
-    <div className="flex w-full">
+    <div className="flex w-full rounded-md border-2 h-10">
       {!readOnly && (
-        <>
+        <div className="flex mx-auto">
           <ToolbarGroup>
             <UndoToolbarButton />
             <RedoToolbarButton />
           </ToolbarGroup>
 
           <ToolbarGroup>
-            <AIToolbarButton tooltip="AI">
-              <WandSparklesIcon />
-            </AIToolbarButton>
-          </ToolbarGroup>
-
-          <ToolbarGroup>
             <ExportToolbarButton>
               <ArrowUpToLineIcon />
             </ExportToolbarButton>
-
             <ImportToolbarButton />
           </ToolbarGroup>
 
           <ToolbarGroup>
-            <InsertDropdownMenu />
             <TurnIntoDropdownMenu />
             <FontSizeToolbarButton />
           </ToolbarGroup>
@@ -115,7 +94,7 @@ export function FixedToolbarButtons() {
               <StrikethroughIcon />
             </MarkToolbarButton>
 
-            <MarkToolbarButton nodeType={CodePlugin.key} tooltip="代码">
+            <MarkToolbarButton nodeType={KbdPlugin.key} tooltip="代码块">
               <Code2Icon />
             </MarkToolbarButton>
 
@@ -128,15 +107,14 @@ export function FixedToolbarButtons() {
 
             <ColorDropdownMenu
               nodeType={FontBackgroundColorPlugin.key}
-              tooltip="背景颜色"
+              tooltip="高亮显示"
             >
-              <PaintBucketIcon />
+              <HighlighterIcon />
             </ColorDropdownMenu>
+            <SuperscriptSubscriptDropdownMenu />
           </ToolbarGroup>
 
           <ToolbarGroup>
-            <AlignDropdownMenu />
-
             <NumberedIndentListToolbarButton />
             <BulletedIndentListToolbarButton />
             <IndentTodoToolbarButton />
@@ -144,42 +122,25 @@ export function FixedToolbarButtons() {
           </ToolbarGroup>
 
           <ToolbarGroup>
-            <LinkToolbarButton />
-            <TableDropdownMenu />
             <EmojiDropdownMenu />
           </ToolbarGroup>
 
           <ToolbarGroup>
-            <MediaToolbarButton nodeType={ImagePlugin.key} />
-            <MediaToolbarButton nodeType={VideoPlugin.key} />
-            <MediaToolbarButton nodeType={AudioPlugin.key} />
-            <MediaToolbarButton nodeType={FilePlugin.key} />
-          </ToolbarGroup>
-
-          <ToolbarGroup>
             <LineHeightDropdownMenu />
+            <AlignDropdownMenu />
             <OutdentToolbarButton />
             <IndentToolbarButton />
           </ToolbarGroup>
 
           <ToolbarGroup>
-            <MoreDropdownMenu />
+            <CommentToolbarButton />
+            <InsertDropdownMenu />
+            <AIToolbarButton tooltip="AI">
+              <WandSparklesIcon />
+            </AIToolbarButton>
           </ToolbarGroup>
-        </>
+        </div>
       )}
-
-      <div className="grow" />
-
-      <ToolbarGroup>
-        <MarkToolbarButton nodeType={HighlightPlugin.key} tooltip="高亮">
-          <HighlighterIcon />
-        </MarkToolbarButton>
-        <CommentToolbarButton />
-      </ToolbarGroup>
-
-      <ToolbarGroup>
-        <ModeDropdownMenu />
-      </ToolbarGroup>
     </div>
   );
 }
