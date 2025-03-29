@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 import type { DropdownMenuProps } from "@radix-ui/react-dropdown-menu";
 
@@ -9,13 +9,13 @@ import {
   SuperscriptPlugin,
 } from "@udecode/plate-basic-marks/react";
 import { useEditorRef, useMarkToolbarButtonState } from "@udecode/plate/react";
-import { CheckIcon, SubscriptIcon, SuperscriptIcon } from "lucide-react";
+import { SubscriptIcon, SuperscriptIcon } from "lucide-react";
 
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
   DropdownMenuTrigger,
   useOpenState,
 } from "./dropdown-menu";
@@ -25,13 +25,23 @@ export function SuperscriptSubscriptDropdownMenu(props: DropdownMenuProps) {
   const editor = useEditorRef();
   const openState = useOpenState();
 
-  // 使用 useMarkToolbarButtonState 检查上标和下标状态
+  // 检查上下标状态
   const superscriptState = useMarkToolbarButtonState({
     nodeType: SuperscriptPlugin.key,
   });
   const subscriptState = useMarkToolbarButtonState({
     nodeType: SubscriptPlugin.key,
   });
+
+  // 计算当前值
+  const [value, setValue] = useState("");
+
+  // 当标记状态变化时更新value
+  useEffect(() => {
+    if (superscriptState.pressed) setValue("superscript");
+    else if (subscriptState.pressed) setValue("subscript");
+    else setValue("");
+  }, [superscriptState.pressed, subscriptState.pressed]);
 
   return (
     <DropdownMenu modal={false} {...openState} {...props}>
@@ -45,40 +55,43 @@ export function SuperscriptSubscriptDropdownMenu(props: DropdownMenuProps) {
         className="ignore-click-outside/toolbar flex max-h-[500px] min-w-[100px] flex-col overflow-y-auto"
         align="start"
       >
-        <DropdownMenuGroup>
-          <DropdownMenuItem
-            onSelect={() => {
+        <DropdownMenuRadioGroup
+          value={value}
+          onValueChange={(newValue) => {
+            setValue(newValue);
+            if (newValue === "superscript") {
               editor.tf.toggleMark(SuperscriptPlugin.key, {
                 remove: SubscriptPlugin.key,
               });
-              editor.tf.focus();
-            }}
-          >
-            <div className="flex items-center justify-between w-full">
-              <div className="flex items-center">
-                <SuperscriptIcon />
-                上标
-              </div>
-              {superscriptState.pressed && <CheckIcon className="h-4 w-4" />}
-            </div>
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            onSelect={() => {
+            } else if (newValue === "subscript") {
               editor.tf.toggleMark(SubscriptPlugin.key, {
                 remove: SuperscriptPlugin.key,
               });
-              editor.tf.focus();
-            }}
-          >
-            <div className="flex items-center justify-between w-full">
-              <div className="flex items-center">
-                <SubscriptIcon />
-                下标
-              </div>
-              {subscriptState.pressed && <CheckIcon className="h-4 w-4" />}
+            } else if (newValue === "") {
+              // 如果当前有上标或下标，则移除
+              if (superscriptState.pressed) {
+                editor.tf.toggleMark(SuperscriptPlugin.key);
+              }
+              if (subscriptState.pressed) {
+                editor.tf.toggleMark(SubscriptPlugin.key);
+              }
+            }
+            editor.tf.focus();
+          }}
+        >
+          <DropdownMenuRadioItem value="superscript">
+            <div className="flex items-center">
+              <SuperscriptIcon className="mr-2" />
+              上标
             </div>
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
+          </DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value="subscript">
+            <div className="flex items-center">
+              <SubscriptIcon className="mr-2" />
+              下标
+            </div>
+          </DropdownMenuRadioItem>
+        </DropdownMenuRadioGroup>
       </DropdownMenuContent>
     </DropdownMenu>
   );
