@@ -169,7 +169,7 @@ const groups: Group[] = [
       },
       {
         icon: <Columns3Icon />,
-        label: "三栏布局",
+        label: "多栏布局",
         value: "action_three_columns",
       },
       {
