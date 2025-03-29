@@ -63,13 +63,13 @@ const turnIntoItems = [
     icon: <Heading4Icon />,
     keywords: ["subtitle", "h4"],
     label: "标题 4",
-    value: HEADING_KEYS.h3,
+    value: HEADING_KEYS.h4,
   },
   {
     icon: <Heading5Icon />,
     keywords: ["subtitle", "h5"],
     label: "标题 5",
-    value: HEADING_KEYS.h3,
+    value: HEADING_KEYS.h5,
   },
   {
     icon: <Heading6Icon />,
@@ -100,7 +100,7 @@ export function TurnIntoDropdownMenu(props: DropdownMenuProps) {
     <DropdownMenu modal={false} {...openState} {...props}>
       <DropdownMenuTrigger asChild>
         <ToolbarButton
-          className="min-w-[100px]"
+          className="min-w-18"
           pressed={openState.open}
           tooltip="转换格式"
           isDropdown
