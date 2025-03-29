@@ -8,6 +8,7 @@ import { motion } from "motion/react";
 const navLinks = [
   { href: "/", label: "首页" },
   { href: "/blog", label: "博客" },
+  { href: "/editor", label: "编辑器" },
   { href: "/contact", label: "联系" },
   { href: "/about", label: "关于" },
 ];
