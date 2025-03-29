@@ -7,7 +7,6 @@ import type { DropdownMenuProps } from "@radix-ui/react-dropdown-menu";
 import { BlockquotePlugin } from "@udecode/plate-block-quote/react";
 import { CodeBlockPlugin } from "@udecode/plate-code-block/react";
 import { DatePlugin } from "@udecode/plate-date/react";
-import { ExcalidrawPlugin } from "@udecode/plate-excalidraw/react";
 import { HEADING_KEYS } from "@udecode/plate-heading";
 import { TocPlugin } from "@udecode/plate-heading/react";
 import { HorizontalRulePlugin } from "@udecode/plate-horizontal-rule/react";
@@ -39,7 +38,6 @@ import {
   ListIcon,
   ListOrderedIcon,
   MinusIcon,
-  PenToolIcon,
   PilcrowIcon,
   PlusIcon,
   QuoteIcon,
@@ -79,11 +77,11 @@ interface Item {
 
 const groups: Group[] = [
   {
-    group: "基础块",
+    group: "基础",
     items: [
       {
         icon: <PilcrowIcon />,
-        label: "段落",
+        label: "正文",
         value: ParagraphPlugin.key,
       },
       {
@@ -171,11 +169,6 @@ const groups: Group[] = [
         label: "视频",
         value: MediaEmbedPlugin.key,
       },
-      {
-        icon: <PenToolIcon />,
-        label: "绘图",
-        value: ExcalidrawPlugin.key,
-      },
     ].map((item) => ({
       ...item,
       onSelect: (editor, value) => {
@@ -184,7 +177,7 @@ const groups: Group[] = [
     })),
   },
   {
-    group: "高级块",
+    group: "高级",
     items: [
       {
         icon: <TableOfContentsIcon />,

@@ -122,7 +122,7 @@ export function BlockContextMenu({ children }: { children: React.ReactNode }) {
           {
             id: "paragraph",
             icon: <Pilcrow className="h-4 w-4" />,
-            label: "段落",
+            label: "正文",
             action: () => handleTurnInto(ParagraphPlugin.key),
           },
           {

@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo } from "react";
 
-import { type SlateEditor, NodeApi } from '@udecode/plate';
-import { AIChatPlugin, AIPlugin } from '@udecode/plate-ai/react';
-import { useIsSelecting } from '@udecode/plate-selection/react';
+import { type SlateEditor, NodeApi } from "@udecode/plate";
+import { AIChatPlugin, AIPlugin } from "@udecode/plate-ai/react";
+import { useIsSelecting } from "@udecode/plate-selection/react";
 import {
   type PlateEditor,
   useEditorRef,
   usePluginOption,
-} from '@udecode/plate/react';
+} from "@udecode/plate/react";
 import {
   Album,
   BadgeHelp,
@@ -23,30 +23,30 @@ import {
   SmileIcon,
   Wand,
   X,
-} from 'lucide-react';
+} from "lucide-react";
 
-import { CommandGroup, CommandItem } from './command';
+import { CommandGroup, CommandItem } from "./command";
 
 export type EditorChatState =
-  | 'cursorCommand'
-  | 'cursorSuggestion'
-  | 'selectionCommand'
-  | 'selectionSuggestion';
+  | "cursorCommand"
+  | "cursorSuggestion"
+  | "selectionCommand"
+  | "selectionSuggestion";
 
 export const aiChatItems = {
   accept: {
     icon: <Check />,
-    label: 'Accept',
-    value: 'accept',
+    label: "接受",
+    value: "accept",
     onSelect: ({ editor }) => {
       editor.getTransforms(AIChatPlugin).aiChat.accept();
-      editor.tf.focus({ edge: 'end' });
+      editor.tf.focus({ edge: "end" });
     },
   },
   continueWrite: {
     icon: <PenLine />,
-    label: 'Continue writing',
-    value: 'continueWrite',
+    label: "继续写作",
+    value: "continueWrite",
     onSelect: ({ editor }) => {
       const ancestorNode = editor.api.block({ highest: true });
 
@@ -55,21 +55,21 @@ export const aiChatItems = {
       const isEmpty = NodeApi.string(ancestorNode[0]).trim().length === 0;
 
       void editor.getApi(AIChatPlugin).aiChat.submit({
-        mode: 'insert',
+        mode: "insert",
         prompt: isEmpty
           ? `<Document>
-{editor}
-</Document>
-Start writing a new paragraph AFTER <Document> ONLY ONE SENTENCE`
-          : 'Continue writing AFTER <Block> ONLY ONE SENTENCE. DONT REPEAT THE TEXT.',
+              {editor}
+            </Document>
+            请在<Document>标签后开始撰写新段落，仅写一句`
+          : "继续在<Block>标签后补充内容，仅写一句，不要重复已有内容。",
       });
     },
   },
   discard: {
     icon: <X />,
-    label: 'Discard',
-    shortcut: 'Escape',
-    value: 'discard',
+    label: "丢弃",
+    shortcut: "Escape",
+    value: "丢弃",
     onSelect: ({ editor }) => {
       editor.getTransforms(AIPlugin).ai.undo();
       editor.getApi(AIChatPlugin).aiChat.hide();
@@ -77,111 +77,111 @@ Start writing a new paragraph AFTER <Document> ONLY ONE SENTENCE`
   },
   emojify: {
     icon: <SmileIcon />,
-    label: 'Emojify',
-    value: 'emojify',
+    label: "表情化",
+    value: "emojify",
     onSelect: ({ editor }) => {
       void editor.getApi(AIChatPlugin).aiChat.submit({
-        prompt: 'Emojify',
+        prompt: "表情化",
       });
     },
   },
   explain: {
     icon: <BadgeHelp />,
-    label: 'Explain',
-    value: 'explain',
+    label: "解释",
+    value: "explain",
     onSelect: ({ editor }) => {
       void editor.getApi(AIChatPlugin).aiChat.submit({
         prompt: {
-          default: 'Explain {editor}',
-          selecting: 'Explain',
+          default: "Explain {editor}",
+          selecting: "解释",
         },
       });
     },
   },
   fixSpelling: {
     icon: <Check />,
-    label: 'Fix spelling & grammar',
-    value: 'fixSpelling',
+    label: "修正错别字和语法",
+    value: "fixSpelling",
     onSelect: ({ editor }) => {
       void editor.getApi(AIChatPlugin).aiChat.submit({
-        prompt: 'Fix spelling and grammar',
+        prompt: "修正错别字和语法",
       });
     },
   },
   improveWriting: {
     icon: <Wand />,
-    label: 'Improve writing',
-    value: 'improveWriting',
+    label: "改善写作",
+    value: "improveWriting",
     onSelect: ({ editor }) => {
       void editor.getApi(AIChatPlugin).aiChat.submit({
-        prompt: 'Improve the writing',
+        prompt: "润色内容",
       });
     },
   },
   insertBelow: {
     icon: <ListEnd />,
-    label: 'Insert below',
-    value: 'insertBelow',
+    label: "在下方插入",
+    value: "insertBelow",
     onSelect: ({ aiEditor, editor }) => {
       void editor.getTransforms(AIChatPlugin).aiChat.insertBelow(aiEditor);
     },
   },
   makeLonger: {
     icon: <ListPlus />,
-    label: 'Make longer',
-    value: 'makeLonger',
+    label: "扩充内容",
+    value: "makeLonger",
     onSelect: ({ editor }) => {
       void editor.getApi(AIChatPlugin).aiChat.submit({
-        prompt: 'Make longer',
+        prompt: "扩充内容",
       });
     },
   },
   makeShorter: {
     icon: <ListMinus />,
-    label: 'Make shorter',
-    value: 'makeShorter',
+    label: "精简内容",
+    value: "makeShorter",
     onSelect: ({ editor }) => {
       void editor.getApi(AIChatPlugin).aiChat.submit({
-        prompt: 'Make shorter',
+        prompt: "精简内容",
       });
     },
   },
   replace: {
     icon: <Check />,
-    label: 'Replace selection',
-    value: 'replace',
+    label: "替换选中内容",
+    value: "replace",
     onSelect: ({ aiEditor, editor }) => {
       void editor.getTransforms(AIChatPlugin).aiChat.replaceSelection(aiEditor);
     },
   },
   simplifyLanguage: {
     icon: <FeatherIcon />,
-    label: 'Simplify language',
-    value: 'simplifyLanguage',
+    label: "简化内容",
+    value: "simplifyLanguage",
     onSelect: ({ editor }) => {
       void editor.getApi(AIChatPlugin).aiChat.submit({
-        prompt: 'Simplify the language',
+        prompt: "简化内容",
       });
     },
   },
   summarize: {
     icon: <Album />,
-    label: 'Add a summary',
-    value: 'summarize',
+    label: "添加总结",
+    value: "summarize",
     onSelect: ({ editor }) => {
       void editor.getApi(AIChatPlugin).aiChat.submit({
-        mode: 'insert',
+        mode: "insert",
         prompt: {
-          default: 'Summarize {editor}',
-          selecting: 'Summarize',
+          default: "总结 {editor}",
+          selecting: "总结",
         },
       });
     },
   },
   tryAgain: {
     icon: <CornerUpLeft />,
-    label: 'Try again',
-    value: 'tryAgain',
+    label: "再次尝试",
+    value: "tryAgain",
     onSelect: ({ editor }) => {
       void editor.getApi(AIChatPlugin).aiChat.reload();
     },
@@ -257,16 +257,16 @@ export const AIMenuItems = ({
   setValue: (value: string) => void;
 }) => {
   const editor = useEditorRef();
-  const { messages } = usePluginOption(AIChatPlugin, 'chat');
-  const aiEditor = usePluginOption(AIChatPlugin, 'aiEditor')!;
+  const { messages } = usePluginOption(AIChatPlugin, "chat");
+  const aiEditor = usePluginOption(AIChatPlugin, "aiEditor")!;
   const isSelecting = useIsSelecting();
 
   const menuState = useMemo(() => {
     if (messages && messages.length > 0) {
-      return isSelecting ? 'selectionSuggestion' : 'cursorSuggestion';
+      return isSelecting ? "selectionSuggestion" : "cursorSuggestion";
     }
 
-    return isSelecting ? 'selectionCommand' : 'cursorCommand';
+    return isSelecting ? "selectionCommand" : "cursorCommand";
   }, [isSelecting, messages]);
 
   const menuGroups = useMemo(() => {
