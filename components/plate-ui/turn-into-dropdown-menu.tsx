@@ -1,31 +1,21 @@
 "use client";
 
 import React from "react";
-
 import type { DropdownMenuProps } from "@radix-ui/react-dropdown-menu";
-
-import { BlockquotePlugin } from "@udecode/plate-block-quote/react";
-import { CodeBlockPlugin } from "@udecode/plate-code-block/react";
 import { HEADING_KEYS } from "@udecode/plate-heading";
-import { INDENT_LIST_KEYS, ListStyleType } from "@udecode/plate-indent-list";
-import { TogglePlugin } from "@udecode/plate-toggle/react";
 import {
   ParagraphPlugin,
   useEditorRef,
   useSelectionFragmentProp,
 } from "@udecode/plate/react";
 import {
-  ChevronRightIcon,
-  Columns3Icon,
-  FileCodeIcon,
   Heading1Icon,
   Heading2Icon,
   Heading3Icon,
-  ListIcon,
-  ListOrderedIcon,
+  Heading4Icon,
+  Heading5Icon,
+  Heading6Icon,
   PilcrowIcon,
-  QuoteIcon,
-  SquareIcon,
 } from "lucide-react";
 
 import {
@@ -48,7 +38,7 @@ const turnIntoItems = [
   {
     icon: <PilcrowIcon />,
     keywords: ["paragraph"],
-    label: "段落",
+    label: "正文",
     value: ParagraphPlugin.key,
   },
   {
@@ -70,45 +60,22 @@ const turnIntoItems = [
     value: HEADING_KEYS.h3,
   },
   {
-    icon: <ListIcon />,
-    keywords: ["unordered", "ul", "-"],
-    label: "无序列表",
-    value: ListStyleType.Disc,
+    icon: <Heading4Icon />,
+    keywords: ["subtitle", "h4"],
+    label: "标题 4",
+    value: HEADING_KEYS.h3,
   },
   {
-    icon: <ListOrderedIcon />,
-    keywords: ["ordered", "ol", "1"],
-    label: "有序列表",
-    value: ListStyleType.Decimal,
+    icon: <Heading5Icon />,
+    keywords: ["subtitle", "h5"],
+    label: "标题 5",
+    value: HEADING_KEYS.h3,
   },
   {
-    icon: <SquareIcon />,
-    keywords: ["checklist", "task", "checkbox", "[]"],
-    label: "待办列表",
-    value: INDENT_LIST_KEYS.todo,
-  },
-  {
-    icon: <ChevronRightIcon />,
-    keywords: ["collapsible", "expandable"],
-    label: "折叠列表",
-    value: TogglePlugin.key,
-  },
-  {
-    icon: <FileCodeIcon />,
-    keywords: ["```"],
-    label: "代码块",
-    value: CodeBlockPlugin.key,
-  },
-  {
-    icon: <QuoteIcon />,
-    keywords: ["citation", "blockquote", ">"],
-    label: "引用",
-    value: BlockquotePlugin.key,
-  },
-  {
-    icon: <Columns3Icon />,
-    label: "多栏布局",
-    value: "action_three_columns",
+    icon: <Heading6Icon />,
+    keywords: ["subtitle", "h6"],
+    label: "标题 6",
+    value: HEADING_KEYS.h6,
   },
 ];
 
