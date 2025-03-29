@@ -1,10 +1,12 @@
 "use client";
 
-import { useId, useEffect, useState } from "react";
-import { MoonIcon, SunIcon } from "lucide-react";
-import { useTheme } from "next-themes";
+import { useEffect, useId, useState } from "react";
+
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+
+import { MoonIcon, SunIcon } from "lucide-react";
+import { useTheme } from "next-themes";
 
 export function ThemeSwitch() {
   const id = useId();

@@ -1,9 +1,10 @@
 "use client";
 
-import { AnimatePresence, motion, MotionProps } from "motion/react";
 import { useEffect, useState } from "react";
 
 import { cn } from "@/lib/utils";
+
+import { AnimatePresence, MotionProps, motion } from "motion/react";
 
 interface WordRotateProps {
   words: string[];

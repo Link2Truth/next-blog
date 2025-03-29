@@ -1,11 +1,13 @@
 "use client";
+
+import { AuroraText } from "@/components/magicui/aurora-text";
+import { WordRotate } from "@/components/magicui/word-rotate";
+import { NavBar } from "@/components/nav-bar";
+import { Button } from "@/components/ui/button";
+
+import { motion } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { NavBar } from "@/components/nav-bar";
-import { WordRotate } from "@/components/magicui/word-rotate";
-import { AuroraText } from "@/components/magicui/aurora-text";
-import { motion } from "motion/react";
 
 export function Hero() {
   return (

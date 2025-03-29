@@ -1,9 +1,15 @@
-import Link from "next/link";
-import { Code2, User } from "lucide-react";
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+
+import { NavBarUserMenu } from "@/components/nav-bar-user-menu";
 import { ThemeSwitch } from "@/components/theme-switch";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { useState, useRef, useEffect } from "react";
+import { createClient } from "@/lib/supabase/client";
+
+import { type User } from "@supabase/supabase-js";
+import { Code2Icon } from "lucide-react";
 import { motion } from "motion/react";
+import Link from "next/link";
 
 const navLinks = [
   { href: "/", label: "首页" },
@@ -15,13 +21,24 @@ const navLinks = [
 export function NavBar() {
   const navItemsRef = useRef<Array<HTMLLIElement | null>>([]);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [loginUser, setLoginUser] = useState<User | null>(null);
   const [dimensions, setDimensions] = useState({
     width: 0,
     height: 0,
     left: 0,
   });
 
-  // 根据鼠标位置，更新元素尺寸和位置
+  // 在组件加载时获取用户信息
+  useEffect(() => {
+    const fetchUser = async () => {
+      const supabase = createClient();
+      const { data } = await supabase.auth.getUser();
+      setLoginUser(data.user);
+    };
+    fetchUser();
+  }, []);
+
+  // 根据鼠标位置，更新导航菜单背景元素尺寸和位置
   useEffect(() => {
     if (hoveredIndex !== null && navItemsRef.current[hoveredIndex]) {
       const currentItem = navItemsRef.current[hoveredIndex];
@@ -36,14 +53,14 @@ export function NavBar() {
   return (
     <motion.nav
       className="fixed top-0 left-0 right-0 flex justify-between items-center px-6 h-16 z-50 bg-background/80 backdrop-blur-sm"
-      initial={{ opacity: 0, y: -20, scale: 0.9 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
       transition={{ duration: 0.8, delay: 0.2 }}
     >
       {/* logo */}
       <div className="flex items-center">
         <div className="mr-2">
-          <Code2 />
+          <Code2Icon />
         </div>
         <h1 className="text-xl font-semibold text-primary">Blog</h1>
       </div>
@@ -93,14 +110,7 @@ export function NavBar() {
       {/* 用户头像 */}
       <div className="hidden md:flex items-center gap-4">
         <ThemeSwitch />
-        <Link href="/login">
-          <Avatar className="h-9 w-9 cursor-pointer border-2 rounded-full">
-            <AvatarImage src="#" alt="用户头像" />
-            <AvatarFallback>
-              <User className="h-4 w-4" />
-            </AvatarFallback>
-          </Avatar>
-        </Link>
+        <NavBarUserMenu user={loginUser} />
       </div>
     </motion.nav>
   );
