@@ -8,8 +8,8 @@ import {
   SubscriptPlugin,
   SuperscriptPlugin,
 } from "@udecode/plate-basic-marks/react";
-import { useEditorRef } from "@udecode/plate/react";
-import { SubscriptIcon, SuperscriptIcon } from "lucide-react";
+import { useEditorRef, useMarkToolbarButtonState } from "@udecode/plate/react";
+import { CheckIcon, SubscriptIcon, SuperscriptIcon } from "lucide-react";
 
 import {
   DropdownMenu,
@@ -25,6 +25,14 @@ export function SuperscriptSubscriptDropdownMenu(props: DropdownMenuProps) {
   const editor = useEditorRef();
   const openState = useOpenState();
 
+  // 使用 useMarkToolbarButtonState 检查上标和下标状态
+  const superscriptState = useMarkToolbarButtonState({
+    nodeType: SuperscriptPlugin.key,
+  });
+  const subscriptState = useMarkToolbarButtonState({
+    nodeType: SubscriptPlugin.key,
+  });
+
   return (
     <DropdownMenu modal={false} {...openState} {...props}>
       <DropdownMenuTrigger asChild>
@@ -34,7 +42,7 @@ export function SuperscriptSubscriptDropdownMenu(props: DropdownMenuProps) {
       </DropdownMenuTrigger>
 
       <DropdownMenuContent
-        className="ignore-click-outside/toolbar flex max-h-[500px] min-w-[80px] flex-col overflow-y-auto"
+        className="ignore-click-outside/toolbar flex max-h-[500px] min-w-[100px] flex-col overflow-y-auto"
         align="start"
       >
         <DropdownMenuGroup>
@@ -46,9 +54,13 @@ export function SuperscriptSubscriptDropdownMenu(props: DropdownMenuProps) {
               editor.tf.focus();
             }}
           >
-            <SuperscriptIcon />
-            上标
-            {/* (⌘+,) */}
+            <div className="flex items-center justify-between w-full">
+              <div className="flex items-center">
+                <SuperscriptIcon />
+                上标
+              </div>
+              {superscriptState.pressed && <CheckIcon className="h-4 w-4" />}
+            </div>
           </DropdownMenuItem>
           <DropdownMenuItem
             onSelect={() => {
@@ -58,9 +70,13 @@ export function SuperscriptSubscriptDropdownMenu(props: DropdownMenuProps) {
               editor.tf.focus();
             }}
           >
-            <SubscriptIcon />
-            下标
-            {/* (⌘+.) */}
+            <div className="flex items-center justify-between w-full">
+              <div className="flex items-center">
+                <SubscriptIcon />
+                下标
+              </div>
+              {subscriptState.pressed && <CheckIcon className="h-4 w-4" />}
+            </div>
           </DropdownMenuItem>
         </DropdownMenuGroup>
       </DropdownMenuContent>
