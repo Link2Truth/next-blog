@@ -1,9 +1,9 @@
-import React from 'react';
+import React from "react";
 
-import type { SlateElementProps } from '@udecode/plate';
+import type { SlateElementProps } from "@udecode/plate";
 
-import { cn } from '@udecode/cn';
-import { SlateElement } from '@udecode/plate';
+import { cn } from "@udecode/cn";
+import { SlateElement } from "@udecode/plate";
 
 export function DateElementStatic({
   children,
@@ -13,9 +13,9 @@ export function DateElementStatic({
   const { element } = props;
 
   return (
-    <SlateElement className={cn(className, 'inline-block')} {...props}>
+    <SlateElement className={cn(className, "inline-block")} {...props}>
       <span
-        className={cn('w-fit rounded-sm bg-muted px-1 text-muted-foreground')}
+        className={cn("w-fit rounded-sm bg-muted px-1 text-muted-foreground")}
       >
         {element.date ? (
           (() => {
@@ -33,18 +33,18 @@ export function DateElementStatic({
               new Date(today.setDate(today.getDate() + 2)).toDateString() ===
               elementDate.toDateString();
 
-            if (isToday) return 'Today';
-            if (isYesterday) return 'Yesterday';
-            if (isTomorrow) return 'Tomorrow';
+            if (isToday) return "今天";
+            if (isYesterday) return "昨天";
+            if (isTomorrow) return "明天";
 
             return elementDate.toLocaleDateString(undefined, {
-              day: 'numeric',
-              month: 'long',
-              year: 'numeric',
+              day: "numeric",
+              month: "long",
+              year: "numeric",
             });
           })()
         ) : (
-          <span>Pick a date</span>
+          <span>选择日期</span>
         )}
       </span>
       {children}

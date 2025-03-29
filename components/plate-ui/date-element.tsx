@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { cn, withRef } from '@udecode/cn';
-import { PlateElement, useReadOnly } from '@udecode/plate/react';
+import { cn, withRef } from "@udecode/cn";
+import { PlateElement, useReadOnly } from "@udecode/plate/react";
 
-import { Calendar } from './calendar';
-import { Popover, PopoverContent, PopoverTrigger } from './popover';
+import { Calendar } from "./calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 
 export const DateElement = withRef<typeof PlateElement>(
   ({ children, className, ...props }, ref) => {
@@ -15,7 +15,7 @@ export const DateElement = withRef<typeof PlateElement>(
     const trigger = (
       <span
         className={cn(
-          'w-fit cursor-pointer rounded-sm bg-muted px-1 text-muted-foreground'
+          "w-fit cursor-pointer rounded-sm bg-muted px-1 text-muted-foreground"
         )}
         contentEditable={false}
         draggable
@@ -36,18 +36,18 @@ export const DateElement = withRef<typeof PlateElement>(
               new Date(today.setDate(today.getDate() + 2)).toDateString() ===
               elementDate.toDateString();
 
-            if (isToday) return 'Today';
-            if (isYesterday) return 'Yesterday';
-            if (isTomorrow) return 'Tomorrow';
+            if (isToday) return "今天";
+            if (isYesterday) return "昨天";
+            if (isTomorrow) return "明天";
 
             return elementDate.toLocaleDateString(undefined, {
-              day: 'numeric',
-              month: 'long',
-              year: 'numeric',
+              day: "numeric",
+              month: "long",
+              year: "numeric",
             });
           })()
         ) : (
-          <span>Pick a date</span>
+          <span>选择日期</span>
         )}
       </span>
     );
@@ -59,7 +59,7 @@ export const DateElement = withRef<typeof PlateElement>(
     return (
       <PlateElement
         ref={ref}
-        className={cn(className, 'inline-block')}
+        className={cn(className, "inline-block")}
         contentEditable={false}
         {...props}
       >
