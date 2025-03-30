@@ -122,10 +122,6 @@ export function FixedToolbarButtons() {
           </ToolbarGroup>
 
           <ToolbarGroup>
-            <EmojiDropdownMenu />
-          </ToolbarGroup>
-
-          <ToolbarGroup>
             <LineHeightDropdownMenu />
             <AlignDropdownMenu />
             <OutdentToolbarButton />
