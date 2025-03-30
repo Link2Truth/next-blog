@@ -7,42 +7,34 @@ import type { DropdownMenuProps } from "@radix-ui/react-dropdown-menu";
 import { BlockquotePlugin } from "@udecode/plate-block-quote/react";
 import { CodeBlockPlugin } from "@udecode/plate-code-block/react";
 import { DatePlugin } from "@udecode/plate-date/react";
-import { HEADING_KEYS } from "@udecode/plate-heading";
 import { TocPlugin } from "@udecode/plate-heading/react";
 import { HorizontalRulePlugin } from "@udecode/plate-horizontal-rule/react";
-import { INDENT_LIST_KEYS, ListStyleType } from "@udecode/plate-indent-list";
 import { LinkPlugin } from "@udecode/plate-link/react";
 import {
   EquationPlugin,
   InlineEquationPlugin,
 } from "@udecode/plate-math/react";
-import { ImagePlugin, MediaEmbedPlugin } from "@udecode/plate-media/react";
+import {
+  AudioPlugin,
+  FilePlugin,
+  ImagePlugin,
+  VideoPlugin,
+} from "@udecode/plate-media/react";
 import { TablePlugin } from "@udecode/plate-table/react";
-import { TogglePlugin } from "@udecode/plate-toggle/react";
+import { type PlateEditor, useEditorRef } from "@udecode/plate/react";
 import {
-  type PlateEditor,
-  ParagraphPlugin,
-  useEditorRef,
-} from "@udecode/plate/react";
-import {
+  AudioLinesIcon,
   CalendarIcon,
-  ChevronRightIcon,
   Columns3Icon,
   FileCodeIcon,
+  FileUpIcon,
   FilmIcon,
-  Heading1Icon,
-  Heading2Icon,
-  Heading3Icon,
   ImageIcon,
   Link2Icon,
-  ListIcon,
-  ListOrderedIcon,
   MinusIcon,
-  PilcrowIcon,
   PlusIcon,
   QuoteIcon,
   RadicalIcon,
-  SquareIcon,
   TableIcon,
   TableOfContentsIcon,
 } from "lucide-react";
@@ -58,9 +50,14 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSub,
+  DropdownMenuSubTrigger,
+  DropdownMenuSubContent,
   useOpenState,
 } from "./dropdown-menu";
 import { ToolbarButton } from "./toolbar";
+import { TableDropdownSubMenuItems } from "./table-insert-dropdown-submenu-items";
+import { MediaDropdownSubMenuItems } from "./media-insert-dropdown-submenu-items";
 
 type Group = {
   group: string;
@@ -73,6 +70,7 @@ interface Item {
   onSelect: (editor: PlateEditor, value: string) => void;
   focusEditor?: boolean;
   label?: string;
+  subItems?: React.ReactNode;
 }
 
 const groups: Group[] = [
@@ -80,34 +78,15 @@ const groups: Group[] = [
     group: "基础",
     items: [
       {
-        icon: <PilcrowIcon />,
-        label: "正文",
-        value: ParagraphPlugin.key,
-      },
-      {
-        icon: <Heading1Icon />,
-        label: "标题 1",
-        value: HEADING_KEYS.h1,
-      },
-      {
-        icon: <Heading2Icon />,
-        label: "标题 2",
-        value: HEADING_KEYS.h2,
-      },
-      {
-        icon: <Heading3Icon />,
-        label: "标题 3",
-        value: HEADING_KEYS.h3,
-      },
-      {
-        icon: <TableIcon />,
-        label: "表格",
-        value: TablePlugin.key,
-      },
-      {
         icon: <FileCodeIcon />,
         label: "代码块",
         value: CodeBlockPlugin.key,
+      },
+      {
+        focusEditor: false,
+        icon: <RadicalIcon />,
+        label: "公式块",
+        value: EquationPlugin.key,
       },
       {
         icon: <QuoteIcon />,
@@ -127,47 +106,31 @@ const groups: Group[] = [
     })),
   },
   {
-    group: "列表",
-    items: [
-      {
-        icon: <ListIcon />,
-        label: "无序列表",
-        value: ListStyleType.Disc,
-      },
-      {
-        icon: <ListOrderedIcon />,
-        label: "有序列表",
-        value: ListStyleType.Decimal,
-      },
-      {
-        icon: <SquareIcon />,
-        label: "待办列表",
-        value: INDENT_LIST_KEYS.todo,
-      },
-      {
-        icon: <ChevronRightIcon />,
-        label: "折叠列表",
-        value: TogglePlugin.key,
-      },
-    ].map((item) => ({
-      ...item,
-      onSelect: (editor, value) => {
-        insertBlock(editor, value);
-      },
-    })),
-  },
-  {
     group: "媒体",
     items: [
       {
         icon: <ImageIcon />,
         label: "图片",
         value: ImagePlugin.key,
+        subItems: <MediaDropdownSubMenuItems nodeType={ImagePlugin.key} />,
       },
       {
         icon: <FilmIcon />,
         label: "视频",
-        value: MediaEmbedPlugin.key,
+        value: VideoPlugin.key,
+        subItems: <MediaDropdownSubMenuItems nodeType={VideoPlugin.key} />,
+      },
+      {
+        icon: <AudioLinesIcon />,
+        label: "音频",
+        value: AudioPlugin.key,
+        subItems: <MediaDropdownSubMenuItems nodeType={AudioPlugin.key} />,
+      },
+      {
+        icon: <FileUpIcon />,
+        label: "文件",
+        value: FilePlugin.key,
+        subItems: <MediaDropdownSubMenuItems nodeType={FilePlugin.key} />,
       },
     ].map((item) => ({
       ...item,
@@ -180,6 +143,12 @@ const groups: Group[] = [
     group: "高级",
     items: [
       {
+        icon: <TableIcon />,
+        label: "表格",
+        value: TablePlugin.key,
+        subItems: <TableDropdownSubMenuItems />,
+      },
+      {
         icon: <TableOfContentsIcon />,
         label: "目录",
         value: TocPlugin.key,
@@ -188,12 +157,6 @@ const groups: Group[] = [
         icon: <Columns3Icon />,
         label: "多栏布局",
         value: "action_three_columns",
-      },
-      {
-        focusEditor: false,
-        icon: <RadicalIcon />,
-        label: "公式",
-        value: EquationPlugin.key,
       },
     ].map((item) => ({
       ...item,
@@ -249,19 +212,30 @@ export function InsertDropdownMenu(props: DropdownMenuProps) {
       >
         {groups.map(({ group, items: nestedItems }) => (
           <DropdownMenuGroup key={group} label={group}>
-            {nestedItems.map(({ icon, label, value, onSelect }) => (
-              <DropdownMenuItem
-                key={value}
-                className="min-w-[180px]"
-                onSelect={() => {
-                  onSelect(editor, value);
-                  editor.tf.focus();
-                }}
-              >
-                {icon}
-                {label}
-              </DropdownMenuItem>
-            ))}
+            {nestedItems.map(({ icon, label, value, onSelect, subItems }) =>
+              subItems ? (
+                <DropdownMenuSub key={value}>
+                  <DropdownMenuSubTrigger className="min-w-[180px]">
+                    {icon}
+                    {label}
+                  </DropdownMenuSubTrigger>
+
+                  <DropdownMenuSubContent>{subItems}</DropdownMenuSubContent>
+                </DropdownMenuSub>
+              ) : (
+                <DropdownMenuItem
+                  key={value}
+                  className="min-w-[180px]"
+                  onSelect={() => {
+                    onSelect(editor, value);
+                    editor.tf.focus();
+                  }}
+                >
+                  {icon}
+                  {label}
+                </DropdownMenuItem>
+              )
+            )}
           </DropdownMenuGroup>
         ))}
       </DropdownMenuContent>
