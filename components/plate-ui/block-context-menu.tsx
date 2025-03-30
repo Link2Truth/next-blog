@@ -16,22 +16,6 @@ import {
   useEditorPlugin,
   usePlateState,
 } from "@udecode/plate/react";
-import {
-  AlignCenter,
-  AlignLeft,
-  AlignRight,
-  Copy,
-  Heading1,
-  Heading2,
-  Heading3,
-  IndentDecrease,
-  IndentIncrease,
-  Pilcrow,
-  Quote,
-  Replace,
-  Sparkles,
-  Trash,
-} from "lucide-react";
 
 import { useIsTouchDevice } from "@/hooks/use-is-touch-device";
 
@@ -85,122 +69,6 @@ export function BlockContextMenu({ children }: { children: React.ReactNode }) {
     return children;
   }
 
-  const menuContextOptions = [
-    [
-      {
-        id: "ai",
-        icon: <Sparkles className="h-4 w-4" />,
-        label: "AI",
-        action: () => {
-          setValue("askAI");
-        },
-      },
-      {
-        id: "delete",
-        icon: <Trash className="h-4 w-4" />,
-        label: "删除",
-        action: () => {
-          editor
-            .getTransforms(BlockSelectionPlugin)
-            .blockSelection.removeNodes();
-          editor.tf.focus();
-        },
-      },
-      {
-        id: "duplicate",
-        icon: <Copy className="h-4 w-4" />,
-        label: "复制",
-        action: () => {
-          editor.getTransforms(BlockSelectionPlugin).blockSelection.duplicate();
-        },
-      },
-      {
-        id: "turnInto",
-        icon: <Replace className="h-4 w-4" />,
-        label: "转换为",
-        submenu: [
-          {
-            id: "paragraph",
-            icon: <Pilcrow className="h-4 w-4" />,
-            label: "正文",
-            action: () => handleTurnInto(ParagraphPlugin.key),
-          },
-          {
-            id: "heading1",
-            icon: <Heading1 className="h-4 w-4" />,
-            label: "标题 1",
-            action: () => handleTurnInto(HEADING_KEYS.h1),
-          },
-          {
-            id: "heading2",
-            icon: <Heading2 className="h-4 w-4" />,
-            label: "标题 2",
-            action: () => handleTurnInto(HEADING_KEYS.h2),
-          },
-          {
-            id: "heading3",
-            icon: <Heading3 className="h-4 w-4" />,
-            label: "标题 3",
-            action: () => handleTurnInto(HEADING_KEYS.h3),
-          },
-          {
-            id: "blockquote",
-            icon: <Quote className="h-4 w-4" />,
-            label: "引用",
-            action: () => handleTurnInto(BlockquotePlugin.key),
-          },
-        ],
-      },
-    ],
-    [
-      {
-        id: "indentIncrease",
-        icon: <IndentIncrease className="h-4 w-4" />,
-        label: "添加缩进",
-        action: () => {
-          editor
-            .getTransforms(BlockSelectionPlugin)
-            .blockSelection.setIndent(1);
-        },
-      },
-      {
-        id: "indentDecrease",
-        icon: <IndentDecrease className="h-4 w-4" />,
-        label: "减少缩进",
-        action: () => {
-          editor
-            .getTransforms(BlockSelectionPlugin)
-            .blockSelection.setIndent(-1);
-        },
-      },
-      {
-        id: "align",
-        icon: <AlignLeft className="h-4 w-4" />,
-        label: "对齐",
-        submenu: [
-          {
-            id: "alignLeft",
-            icon: <AlignLeft className="h-4 w-4" />,
-            label: "靠左",
-            action: () => handleAlign("left"),
-          },
-          {
-            id: "alignCenter",
-            icon: <AlignCenter className="h-4 w-4" />,
-            label: "居中",
-            action: () => handleAlign("center"),
-          },
-          {
-            id: "alignRight",
-            icon: <AlignRight className="h-4 w-4" />,
-            label: "靠右",
-            action: () => handleAlign("right"),
-          },
-        ],
-      },
-    ],
-  ];
-
   return (
     <ContextMenu
       onOpenChange={(open) => {
@@ -243,41 +111,110 @@ export function BlockContextMenu({ children }: { children: React.ReactNode }) {
           setValue(null);
         }}
       >
-        {menuContextOptions.map((groupItems, groupIndex) => (
-          <ContextMenuGroup key={`group-${groupIndex}`}>
-            {groupItems.map((item) =>
-              item.submenu ? (
-                <ContextMenuSub key={item.id}>
-                  <ContextMenuSubTrigger className="gap-2">
-                    {item.icon}
-                    {item.label}
-                  </ContextMenuSubTrigger>
-                  <ContextMenuSubContent className="w-30">
-                    {item.submenu.map((subItem) => (
-                      <ContextMenuItem
-                        key={subItem.id}
-                        onClick={subItem.action}
-                        className="gap-2"
-                      >
-                        {subItem.icon}
-                        {subItem.label}
-                      </ContextMenuItem>
-                    ))}
-                  </ContextMenuSubContent>
-                </ContextMenuSub>
-              ) : (
-                <ContextMenuItem
-                  key={item.id}
-                  onClick={item.action}
-                  className="gap-2"
-                >
-                  {item.icon}
-                  {item.label}
-                </ContextMenuItem>
-              )
-            )}
-          </ContextMenuGroup>
-        ))}
+        <ContextMenuGroup>
+          <ContextMenuItem
+            onClick={() => {
+              setValue("askAI");
+            }}
+          >
+            AI
+          </ContextMenuItem>
+        </ContextMenuGroup>
+        <ContextMenuGroup>
+          <ContextMenuItem
+            onClick={() => {
+              editor
+                .getTransforms(BlockSelectionPlugin)
+                .blockSelection.duplicate();
+            }}
+          >
+            复制
+            {/* <ContextMenuShortcut>⌘ + D</ContextMenuShortcut> */}
+          </ContextMenuItem>
+          <ContextMenuItem
+            onClick={() => {
+              editor
+                .getTransforms(BlockSelectionPlugin)
+                .blockSelection.removeNodes();
+              editor.tf.focus();
+            }}
+          >
+            删除
+          </ContextMenuItem>
+        </ContextMenuGroup>
+        <ContextMenuGroup>
+          <ContextMenuSub>
+            <ContextMenuSubTrigger>转换格式</ContextMenuSubTrigger>
+            <ContextMenuSubContent className="w-30">
+              <ContextMenuItem
+                onClick={() => handleTurnInto(ParagraphPlugin.key)}
+              >
+                正文
+              </ContextMenuItem>
+
+              <ContextMenuItem onClick={() => handleTurnInto(HEADING_KEYS.h1)}>
+                标题 1
+              </ContextMenuItem>
+              <ContextMenuItem onClick={() => handleTurnInto(HEADING_KEYS.h2)}>
+                标题 2
+              </ContextMenuItem>
+              <ContextMenuItem onClick={() => handleTurnInto(HEADING_KEYS.h3)}>
+                标题 3
+              </ContextMenuItem>
+              <ContextMenuItem onClick={() => handleTurnInto(HEADING_KEYS.h4)}>
+                标题 4
+              </ContextMenuItem>
+              <ContextMenuItem onClick={() => handleTurnInto(HEADING_KEYS.h5)}>
+                标题 5
+              </ContextMenuItem>
+              <ContextMenuItem onClick={() => handleTurnInto(HEADING_KEYS.h6)}>
+                标题 6
+              </ContextMenuItem>
+              <ContextMenuItem
+                onClick={() => handleTurnInto(BlockquotePlugin.key)}
+              >
+                引用
+              </ContextMenuItem>
+            </ContextMenuSubContent>
+          </ContextMenuSub>
+          <ContextMenuSub>
+            <ContextMenuSubTrigger>缩进</ContextMenuSubTrigger>
+            <ContextMenuSubContent className="w-30">
+              <ContextMenuItem
+                onClick={() =>
+                  editor
+                    .getTransforms(BlockSelectionPlugin)
+                    .blockSelection.setIndent(1)
+                }
+              >
+                添加缩进
+              </ContextMenuItem>
+              <ContextMenuItem
+                onClick={() =>
+                  editor
+                    .getTransforms(BlockSelectionPlugin)
+                    .blockSelection.setIndent(-1)
+                }
+              >
+                减少缩进
+              </ContextMenuItem>
+            </ContextMenuSubContent>
+          </ContextMenuSub>
+          <ContextMenuSub>
+            <ContextMenuSubTrigger>对齐</ContextMenuSubTrigger>
+            <ContextMenuSubContent className="w-30">
+              <ContextMenuItem onClick={() => handleAlign("left")}>
+                左侧
+              </ContextMenuItem>
+              <ContextMenuItem onClick={() => handleAlign("center")}>
+                居中
+              </ContextMenuItem>
+              <ContextMenuItem onClick={() => handleAlign("right")}>
+                右侧
+              </ContextMenuItem>
+            </ContextMenuSubContent>
+          </ContextMenuSub>
+        </ContextMenuGroup>
       </ContextMenuContent>
     </ContextMenu>
   );
