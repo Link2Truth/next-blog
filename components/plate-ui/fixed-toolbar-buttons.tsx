@@ -47,6 +47,8 @@ import { InsertDropdownMenu } from "./insert-dropdown-menu";
 import { LineHeightDropdownMenu } from "./line-height-dropdown-menu";
 import { MarkToolbarButton } from "./mark-toolbar-button";
 import { OutdentToolbarButton } from "./outdent-toolbar-button";
+import { PublishToolbarButton } from "./publish-toolbar-button";
+import { SaveToolbarButton } from "./save-toolbar-button";
 import { ToggleToolbarButton } from "./toggle-toolbar-button";
 import { ToolbarGroup } from "./toolbar";
 import { TurnIntoDropdownMenu } from "./turn-into-dropdown-menu";
@@ -135,6 +137,10 @@ export function FixedToolbarButtons() {
             <AIToolbarButton tooltip="AI">
               <WandSparklesIcon />
             </AIToolbarButton>
+          </ToolbarGroup>
+          <ToolbarGroup>
+            <SaveToolbarButton />
+            <PublishToolbarButton />
           </ToolbarGroup>
         </div>
       )}
