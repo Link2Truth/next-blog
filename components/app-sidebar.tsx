@@ -25,43 +25,80 @@ import Link from "next/link";
 const data = {
   navMain: [
     {
-      title: "Getting Started",
+      title: "网站概况",
       url: "#",
       items: [
         {
-          title: "Installation",
-          url: "#",
+          title: "概览统计",
+          url: "/dashboard",
         },
         {
-          title: "Project Structure",
-          url: "#",
+          title: "访问分析",
+          url: "/dashboard/analytics",
         },
       ],
     },
     {
-      title: "Building Your Application",
+      title: "内容管理",
       url: "#",
       items: [
         {
-          title: "Routing",
-          url: "#",
+          title: "写文章",
+          url: "/dashboard/posts/create",
         },
         {
-          title: "Data Fetching",
-          url: "#",
+          title: "所有文章",
+          url: "/dashboard/posts",
+        },
+        {
+          title: "草稿箱",
+          url: "/dashboard/posts/drafts",
+        },
+        {
+          title: "已发布",
+          url: "/dashboard/posts/published",
+        },
+      ],
+    },
+    {
+      title: "评论管理",
+      url: "/dashboard/comments",
+
+      items: [
+        {
+          title: "所有评论",
+          url: "/dashboard/comments",
+        },
+        {
+          title: "待审核",
+          url: "/dashboard/comments/pending",
+        },
+        {
+          title: "已批准",
+          url: "/dashboard/comments/approved",
+        },
+        {
+          title: "垃圾评论",
+          url: "/dashboard/comments/spam",
+        },
+      ],
+    },
+    {
+      title: "用户管理",
+      url: "/dashboard/users",
+      items: [
+        {
+          title: "所有用户",
+          url: "/dashboard/users",
           isActive: true,
         },
         {
-          title: "Rendering",
-          url: "#",
+          title: "添加用户",
+          url: "/dashboard/users/new",
         },
         {
-          title: "Caching",
-          url: "#",
-        },
-        {
-          title: "Styling",
-          url: "#",
+          title: "个人资料",
+          url: "/dashboard/profile",
         },
       ],
     },
