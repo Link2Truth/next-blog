@@ -2,6 +2,8 @@
 
 import React, { useMemo } from "react";
 
+import { STRUCTURAL_TYPES } from "@/components/editor/transforms";
+
 import { cn, withRef } from "@udecode/cn";
 import { isType } from "@udecode/plate";
 import { BlockquotePlugin } from "@udecode/plate-block-quote/react";
@@ -23,10 +25,10 @@ import {
 } from "@udecode/plate-table/react";
 import { TogglePlugin } from "@udecode/plate-toggle/react";
 import {
-  type PlateRenderElementProps,
-  type RenderNodeWrapper,
   MemoizedChildren,
   ParagraphPlugin,
+  type PlateRenderElementProps,
+  type RenderNodeWrapper,
   useEditorRef,
   useElement,
   usePath,
@@ -34,8 +36,6 @@ import {
 } from "@udecode/plate/react";
 import { useReadOnly, useSelected } from "@udecode/plate/react";
 import { GripVertical } from "lucide-react";
-
-import { STRUCTURAL_TYPES } from "@/components/editor/transforms";
 
 import { TooltipButton } from "./tooltip";
 
@@ -112,7 +112,9 @@ export const Draggable = withRef<"div", PlateRenderElementProps>(
         className={cn(
           "relative",
           isDragging && "opacity-50",
-          STRUCTURAL_TYPES.includes(element.type) ? "group/structural" : "group"
+          STRUCTURAL_TYPES.includes(element.type)
+            ? "group/structural"
+            : "group",
         )}
       >
         {!isInTable && (
@@ -128,14 +130,14 @@ export const Draggable = withRef<"div", PlateRenderElementProps>(
                   HEADING_KEYS.h4,
                   HEADING_KEYS.h5,
                 ]) && "h-[1.3em]",
-                isInColumn && "h-4"
+                isInColumn && "h-4",
               )}
             >
               <div
                 className={cn(
                   "slate-blockToolbar",
                   "pointer-events-auto mr-1 flex items-center",
-                  isInColumn && "mr-1.5"
+                  isInColumn && "mr-1.5",
                 )}
               >
                 <div ref={handleRef} className="size-4">
@@ -153,7 +155,7 @@ export const Draggable = withRef<"div", PlateRenderElementProps>(
         </div>
       </div>
     );
-  }
+  },
 );
 
 const Gutter = React.forwardRef<
@@ -165,7 +167,7 @@ const Gutter = React.forwardRef<
   const path = usePath();
   const isSelectionAreaVisible = usePluginOption(
     BlockSelectionPlugin,
-    "isSelectionAreaVisible"
+    "isSelectionAreaVisible",
   );
   const selected = useSelected();
 
@@ -203,7 +205,7 @@ const Gutter = React.forwardRef<
         ]) && "py-0",
         isNodeType([PlaceholderPlugin.key, TablePlugin.key]) && "pt-3 pb-0",
         isInColumn && "mt-2 h-4 pt-0",
-        className
+        className,
       )}
       contentEditable={false}
       {...props}
@@ -250,10 +252,10 @@ const DropLine = React.memo(
             "bg-brand/50",
             dropLine === "top" && "-top-px",
             dropLine === "bottom" && "-bottom-px",
-            className
+            className,
           )}
         />
       );
-    }
-  )
+    },
+  ),
 );

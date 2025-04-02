@@ -1,6 +1,13 @@
 "use client";
 
 import React from "react";
+
+import {
+  STRUCTURAL_TYPES,
+  getBlockType,
+  setBlockType,
+} from "@/components/editor/transforms";
+
 import type { DropdownMenuProps } from "@radix-ui/react-dropdown-menu";
 import { HEADING_KEYS } from "@udecode/plate-heading";
 import {
@@ -17,12 +24,6 @@ import {
   Heading6Icon,
   PilcrowIcon,
 } from "lucide-react";
-
-import {
-  getBlockType,
-  setBlockType,
-  STRUCTURAL_TYPES,
-} from "@/components/editor/transforms";
 
 import {
   DropdownMenu,
@@ -91,9 +92,9 @@ export function TurnIntoDropdownMenu(props: DropdownMenuProps) {
   const selectedItem = React.useMemo(
     () =>
       turnIntoItems.find(
-        (item) => item.value === (value ?? ParagraphPlugin.key)
+        (item) => item.value === (value ?? ParagraphPlugin.key),
       ) ?? turnIntoItems[0],
-    [value]
+    [value],
   );
 
   return (

@@ -3,7 +3,6 @@
 import React, { useCallback, useState } from "react";
 
 import type { DropdownMenuProps } from "@radix-ui/react-dropdown-menu";
-
 import { isUrl } from "@udecode/plate";
 import {
   AudioPlugin,

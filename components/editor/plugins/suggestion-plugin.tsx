@@ -1,4 +1,6 @@
-'use client';
+"use client";
+
+import { BlockSuggestion } from "@/components/plate-ui/block-suggestion";
 
 import {
   type ExtendConfig,
@@ -6,14 +8,12 @@ import {
   isSlateEditor,
   isSlateElement,
   isSlateString,
-} from '@udecode/plate';
+} from "@udecode/plate";
 import {
   type BaseSuggestionConfig,
   BaseSuggestionPlugin,
-} from '@udecode/plate-suggestion';
-import { toTPlatePlugin } from '@udecode/plate/react';
-
-import { BlockSuggestion } from '@/components/plate-ui/block-suggestion';
+} from "@udecode/plate-suggestion";
+import { toTPlatePlugin } from "@udecode/plate/react";
 
 export type SuggestionConfig = ExtendConfig<
   BaseSuggestionConfig,
@@ -35,7 +35,7 @@ export const suggestionPlugin = toTPlatePlugin<SuggestionConfig>(
         let isSet = false;
 
         const unsetActiveSuggestion = () => {
-          setOption('activeId', null);
+          setOption("activeId", null);
           isSet = true;
         };
 
@@ -59,7 +59,7 @@ export const suggestionPlugin = toTPlatePlugin<SuggestionConfig>(
 
             const id = api.suggestion!.nodeId(suggestionEntry[0]);
 
-            setOption('activeId', id ?? null);
+            setOption("activeId", id ?? null);
             isSet = true;
 
             break;
@@ -73,7 +73,7 @@ export const suggestionPlugin = toTPlatePlugin<SuggestionConfig>(
     },
     options: {
       activeId: null,
-      currentUserId: 'user3',
+      currentUserId: "user3",
       hoverId: null,
       uniquePathMap: new Map(),
     },
@@ -86,5 +86,5 @@ export const suggestionPlugin = toTPlatePlugin<SuggestionConfig>(
         return <BlockSuggestion element={element} />;
       },
     },
-  }
+  },
 );

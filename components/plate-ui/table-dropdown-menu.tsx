@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 
 import type { DropdownMenuProps } from "@radix-ui/react-dropdown-menu";
-
 import { cn } from "@udecode/cn";
 import { TablePlugin, useTableMergeState } from "@udecode/plate-table/react";
 import { useEditorPlugin, useEditorSelector } from "@udecode/plate/react";
@@ -36,7 +35,7 @@ import { ToolbarButton } from "./toolbar";
 export function TableDropdownMenu(props: DropdownMenuProps) {
   const tableSelected = useEditorSelector(
     (editor) => editor.api.some({ match: { type: TablePlugin.key } }),
-    []
+    [],
   );
 
   const { editor, tf } = useEditorPlugin(TablePlugin);
@@ -238,14 +237,14 @@ export function TablePicker() {
                 key={`(${rowIndex},${columIndex})`}
                 className={cn(
                   "col-span-1 size-3 border border-solid bg-secondary",
-                  !!value && "border-current"
+                  !!value && "border-current",
                 )}
                 onMouseMove={() => {
                   onCellMove(rowIndex, columIndex);
                 }}
               />
             );
-          })
+          }),
         )}
       </div>
 

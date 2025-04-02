@@ -2,6 +2,8 @@
 
 import * as React from "react";
 
+import { useChat } from "@/components/editor/use-chat";
+
 import { type NodeEntry, isHotkey } from "@udecode/plate";
 import {
   AIChatPlugin,
@@ -18,8 +20,6 @@ import {
   usePluginOption,
 } from "@udecode/plate/react";
 import { Loader2Icon } from "lucide-react";
-
-import { useChat } from "@/components/editor/use-chat";
 
 import { AIChatEditor } from "./ai-chat-editor";
 import { AIMenuItems } from "./ai-menu-items";
@@ -38,7 +38,7 @@ export function AIMenu() {
 
   const { input, isLoading, messages, setInput } = chat;
   const [anchorElement, setAnchorElement] = React.useState<HTMLElement | null>(
-    null
+    null,
   );
 
   const content = useLastAssistantMessage()?.content;
@@ -88,7 +88,7 @@ export function AIMenu() {
     () => {
       api.aiChat.show();
     },
-    { enableOnContentEditable: true, enableOnFormTags: true }
+    { enableOnContentEditable: true, enableOnFormTags: true },
   );
 
   return (

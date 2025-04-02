@@ -50,14 +50,14 @@ function TablePicker() {
                 key={`(${rowIndex},${columIndex})`}
                 className={cn(
                   "col-span-1 size-3 border border-solid bg-secondary",
-                  !!value && "border-current"
+                  !!value && "border-current",
                 )}
                 onMouseMove={() => {
                   onCellMove(rowIndex, columIndex);
                 }}
               />
             );
-          })
+          }),
         )}
       </div>
 

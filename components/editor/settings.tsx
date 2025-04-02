@@ -2,19 +2,6 @@
 
 import { type ReactNode, createContext, useContext, useState } from "react";
 
-import { cn } from "@udecode/cn";
-import { CopilotPlugin } from "@udecode/plate-ai/react";
-import { useEditorPlugin } from "@udecode/plate/react";
-import {
-  Check,
-  ChevronsUpDown,
-  ExternalLinkIcon,
-  Eye,
-  EyeOff,
-  Settings,
-  Wand2Icon,
-} from "lucide-react";
-
 import { Button } from "@/components/plate-ui/button";
 import {
   Command,
@@ -39,6 +26,19 @@ import {
   PopoverTrigger,
 } from "@/components/plate-ui/popover";
 
+import { cn } from "@udecode/cn";
+import { CopilotPlugin } from "@udecode/plate-ai/react";
+import { useEditorPlugin } from "@udecode/plate/react";
+import {
+  Check,
+  ChevronsUpDown,
+  ExternalLinkIcon,
+  Eye,
+  EyeOff,
+  Settings,
+  Wand2Icon,
+} from "lucide-react";
+
 interface Model {
   label: string;
   value: string;
@@ -57,7 +57,7 @@ export const models: Model[] = [
 ];
 
 const SettingsContext = createContext<SettingsContextType | undefined>(
-  undefined
+  undefined,
 );
 
 export function SettingsProvider({ children }: { children: ReactNode }) {
@@ -196,7 +196,7 @@ export function SettingsDialog() {
           className={cn(
             "group fixed right-4 bottom-4 z-50 size-10 overflow-hidden",
             "rounded-full shadow-md hover:shadow-lg",
-            "transition-all duration-300 ease-in-out hover:w-[80px]"
+            "transition-all duration-300 ease-in-out hover:w-[80px]",
           )}
           data-block-hide
         >
@@ -206,7 +206,7 @@ export function SettingsDialog() {
               className={cn(
                 "whitespace-nowrap opacity-0 transition-all duration-300 ease-in-out",
                 "group-hover:translate-x-0 group-hover:opacity-100",
-                "-translate-x-2"
+                "-translate-x-2",
               )}
             >
               设置
@@ -273,7 +273,7 @@ export function SettingsDialog() {
                                   "mr-2 size-4",
                                   model.value === m.value
                                     ? "opacity-100"
-                                    : "opacity-0"
+                                    : "opacity-0",
                                 )}
                               />
                               <code>{m.label}</code>

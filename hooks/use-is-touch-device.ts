@@ -5,6 +5,8 @@ import { useEffect, useState } from "react";
 
 // TODO 和useMobile合并
 
+// TODO 和useMobile合并
+
 export function useIsTouchDevice() {
   const [isTouchDevice, setIsTouchDevice] = useState(false);
 

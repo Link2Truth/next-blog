@@ -2,17 +2,19 @@
 
 import React from "react";
 
+import { SuperscriptSubscriptDropdownMenu } from "@/components/plate-ui/superscript-subscript-dropdown-menu";
+
 import {
   BoldPlugin,
   ItalicPlugin,
   StrikethroughPlugin,
   UnderlinePlugin,
 } from "@udecode/plate-basic-marks/react";
-import { KbdPlugin } from "@udecode/plate-kbd/react";
 import {
   FontBackgroundColorPlugin,
   FontColorPlugin,
 } from "@udecode/plate-font/react";
+import { KbdPlugin } from "@udecode/plate-kbd/react";
 import { useEditorReadOnly } from "@udecode/plate/react";
 import {
   ArrowUpToLineIcon,
@@ -26,7 +28,6 @@ import {
   WandSparklesIcon,
 } from "lucide-react";
 
-import { SuperscriptSubscriptDropdownMenu } from "@/components/plate-ui/superscript-subscript-dropdown-menu";
 import { AIToolbarButton } from "./ai-toolbar-button";
 import { AlignDropdownMenu } from "./align-dropdown-menu";
 import { ColorDropdownMenu } from "./color-dropdown-menu";
@@ -54,7 +55,7 @@ export function FixedToolbarButtons() {
   const readOnly = useEditorReadOnly();
 
   return (
-    <div className="flex w-full rounded-md border-2 h-10">
+    <div className="flex w-full h-10">
       {!readOnly && (
         <div className="flex mx-auto">
           <ToolbarGroup>

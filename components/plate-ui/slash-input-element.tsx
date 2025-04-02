@@ -2,6 +2,11 @@
 
 import React from "react";
 
+import {
+  insertBlock,
+  insertInlineElement,
+} from "@/components/editor/transforms";
+
 import { withRef } from "@udecode/cn";
 import { AIChatPlugin } from "@udecode/plate-ai/react";
 import { BlockquotePlugin } from "@udecode/plate-block-quote/react";
@@ -16,7 +21,7 @@ import {
 } from "@udecode/plate-math/react";
 import { TablePlugin } from "@udecode/plate-table/react";
 import { TogglePlugin } from "@udecode/plate-toggle/react";
-import { type PlateEditor, ParagraphPlugin } from "@udecode/plate/react";
+import { ParagraphPlugin, type PlateEditor } from "@udecode/plate/react";
 import { PlateElement } from "@udecode/plate/react";
 import {
   CalendarIcon,
@@ -36,11 +41,6 @@ import {
   Table,
   TableOfContentsIcon,
 } from "lucide-react";
-
-import {
-  insertBlock,
-  insertInlineElement,
-} from "@/components/editor/transforms";
 
 import {
   InlineCombobox,
@@ -246,7 +246,7 @@ export const SlashInputElement = withRef<typeof PlateElement>(
                       <div className="mr-2 text-muted-foreground">{icon}</div>
                       {label ?? value}
                     </InlineComboboxItem>
-                  )
+                  ),
                 )}
               </InlineComboboxGroup>
             ))}
@@ -256,5 +256,5 @@ export const SlashInputElement = withRef<typeof PlateElement>(
         {children}
       </PlateElement>
     );
-  }
+  },
 );

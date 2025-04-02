@@ -3,7 +3,6 @@
 import React from "react";
 
 import type { DropdownMenuProps } from "@radix-ui/react-dropdown-menu";
-
 import { getEditorDOMFromHtmlString } from "@udecode/plate";
 import { MarkdownPlugin } from "@udecode/plate-markdown";
 import { useEditorRef } from "@udecode/plate/react";

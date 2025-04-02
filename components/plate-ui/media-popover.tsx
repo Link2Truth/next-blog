@@ -3,7 +3,6 @@
 import React, { useEffect } from "react";
 
 import type { WithRequiredKey } from "@udecode/plate";
-
 import {
   FloatingMedia as FloatingMediaPrimitive,
   FloatingMediaStore,
@@ -38,7 +37,7 @@ export function MediaPopover({ children, plugin }: MediaPopoverProps) {
 
   const selectionCollapsed = useEditorSelector(
     (editor) => !editor.api.isExpanded(),
-    []
+    [],
   );
   const isImagePreviewOpen = useImagePreviewValue("isOpen", editor.id);
   const isOpen =

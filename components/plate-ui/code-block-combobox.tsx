@@ -2,9 +2,8 @@
 
 import React, { useState } from "react";
 
-import type { TCodeBlockElement } from "@udecode/plate-code-block";
-
 import { cn } from "@udecode/cn";
+import type { TCodeBlockElement } from "@udecode/plate-code-block";
 import { useEditorRef, useElement, useReadOnly } from "@udecode/plate/react";
 import { Check } from "lucide-react";
 
@@ -124,9 +123,9 @@ export function CodeBlockCombobox() {
       languages.filter(
         (language) =>
           !searchValue ||
-          language.label.toLowerCase().includes(searchValue.toLowerCase())
+          language.label.toLowerCase().includes(searchValue.toLowerCase()),
       ),
-    [searchValue]
+    [searchValue],
   );
 
   if (readOnly) return null;
@@ -168,7 +167,7 @@ export function CodeBlockCombobox() {
                   onSelect={(value) => {
                     editor.tf.setNodes<TCodeBlockElement>(
                       { lang: value },
-                      { at: element }
+                      { at: element },
                     );
                     setSearchValue(value);
                     setOpen(false);
@@ -176,7 +175,7 @@ export function CodeBlockCombobox() {
                 >
                   <Check
                     className={cn(
-                      value === language.value ? "opacity-100" : "opacity-0"
+                      value === language.value ? "opacity-100" : "opacity-0",
                     )}
                   />
                   {language.label}

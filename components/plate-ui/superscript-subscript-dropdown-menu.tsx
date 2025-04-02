@@ -1,9 +1,8 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import type { DropdownMenuProps } from "@radix-ui/react-dropdown-menu";
-
 import {
   SubscriptPlugin,
   SuperscriptPlugin,

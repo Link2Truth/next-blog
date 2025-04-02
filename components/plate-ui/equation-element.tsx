@@ -2,9 +2,8 @@
 
 import React, { useRef, useState } from "react";
 
-import type { TEquationElement } from "@udecode/plate-math";
-
 import { cn, withRef } from "@udecode/cn";
+import type { TEquationElement } from "@udecode/plate-math";
 import { useEquationElement } from "@udecode/plate-math/react";
 import { PlateElement, useElement, useSelected } from "@udecode/plate/react";
 import { RadicalIcon } from "lucide-react";
@@ -45,7 +44,7 @@ export const EquationElement = withRef<typeof PlateElement>(
                 "group flex cursor-pointer items-center justify-center rounded-sm select-none hover:bg-primary/10 data-[selected=true]:bg-primary/10",
                 element.texExpression.length === 0
                   ? "bg-muted p-3 pr-9"
-                  : "px-2 py-1"
+                  : "px-2 py-1",
               )}
               data-selected={selected}
               contentEditable={false}
@@ -73,5 +72,5 @@ export const EquationElement = withRef<typeof PlateElement>(
         {children}
       </PlateElement>
     );
-  }
+  },
 );

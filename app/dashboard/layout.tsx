@@ -40,7 +40,7 @@ export default async function SidebarLayout({
             className="mr-2 data-[orientation=vertical]:h-4"
           />
         </header>
-        <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+        <div className="flex flex-1 flex-col gap-4 p-2 pt-0">
           {/* TODO 添加面包屑 */}
           {children}
         </div>

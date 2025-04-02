@@ -2,8 +2,12 @@
 
 import React from "react";
 
-import type { DropdownMenuProps } from "@radix-ui/react-dropdown-menu";
+import {
+  insertBlock,
+  insertInlineElement,
+} from "@/components/editor/transforms";
 
+import type { DropdownMenuProps } from "@radix-ui/react-dropdown-menu";
 import { BlockquotePlugin } from "@udecode/plate-block-quote/react";
 import { CodeBlockPlugin } from "@udecode/plate-code-block/react";
 import { DatePlugin } from "@udecode/plate-date/react";
@@ -40,24 +44,19 @@ import {
 } from "lucide-react";
 
 import {
-  insertBlock,
-  insertInlineElement,
-} from "@/components/editor/transforms";
-
-import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuTrigger,
   DropdownMenuSub,
-  DropdownMenuSubTrigger,
   DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
   useOpenState,
 } from "./dropdown-menu";
-import { ToolbarButton } from "./toolbar";
-import { TableDropdownSubMenuItems } from "./table-insert-dropdown-submenu-items";
 import { MediaDropdownSubMenuItems } from "./media-insert-dropdown-submenu-items";
+import { TableDropdownSubMenuItems } from "./table-insert-dropdown-submenu-items";
+import { ToolbarButton } from "./toolbar";
 
 type Group = {
   group: string;
@@ -234,7 +233,7 @@ export function InsertDropdownMenu(props: DropdownMenuProps) {
                   {icon}
                   {label}
                 </DropdownMenuItem>
-              )
+              ),
             )}
           </DropdownMenuGroup>
         ))}

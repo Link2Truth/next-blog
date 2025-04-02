@@ -5,7 +5,7 @@ import { Toaster } from "sonner";
 
 export default function Page() {
   return (
-    <div className="h-screen w-full" data-registry="plate">
+    <div className="h-full w-full border-2 rounded-md" data-registry="plate">
       <SettingsProvider>
         <PlateEditor />
       </SettingsProvider>
