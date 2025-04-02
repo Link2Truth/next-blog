@@ -1,14 +1,14 @@
-import type { NextRequest } from 'next/server';
+import type { NextRequest } from "next/server";
 
-import { createOpenAI } from '@ai-sdk/openai';
-import { convertToCoreMessages, streamText } from 'ai';
-import { NextResponse } from 'next/server';
+import { createOpenAI } from "@ai-sdk/openai";
+import { convertToCoreMessages, streamText } from "ai";
+import { NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
   const {
     apiKey: key,
     messages,
-    model = 'gpt-4o-mini',
+    model = process.env.OPENAI_MODEL,
     system,
   } = await req.json();
 
@@ -16,12 +16,15 @@ export async function POST(req: NextRequest) {
 
   if (!apiKey) {
     return NextResponse.json(
-      { error: 'Missing OpenAI API key.' },
+      { error: "Missing OpenAI API key." },
       { status: 401 }
     );
   }
 
-  const openai = createOpenAI({ apiKey });
+  const openai = createOpenAI({
+    apiKey,
+    baseURL: process.env.OPENAI_API_BASE_URL,
+  });
 
   try {
     const result = await streamText({
@@ -34,7 +37,7 @@ export async function POST(req: NextRequest) {
     return result.toDataStreamResponse();
   } catch {
     return NextResponse.json(
-      { error: 'Failed to process AI request' },
+      { error: "Failed to process AI request" },
       { status: 500 }
     );
   }
