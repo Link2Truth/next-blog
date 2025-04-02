@@ -11,13 +11,33 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 
 export function PlateEditor() {
-  const editor = useCreateEditor();
+  const value = [
+    {
+      type: "p",
+      children: [
+        {
+          text: "开始输入...",
+        },
+      ],
+    },
+  ];
+  const localValue =
+    typeof window !== "undefined" && localStorage.getItem("editorContent");
+
+  const editor = useCreateEditor({
+    value: localValue ? JSON.parse(localValue) : value,
+  });
 
   return (
     <DndProvider backend={HTML5Backend}>
-      <Plate editor={editor}>
+      <Plate
+        editor={editor}
+        onChange={({ value }) => {
+          localStorage.setItem("editorContent", JSON.stringify(value));
+        }}
+      >
         <EditorContainer>
-          <Editor variant="demo" />
+          <Editor variant="default" />
         </EditorContainer>
 
         <SettingsDialog />
