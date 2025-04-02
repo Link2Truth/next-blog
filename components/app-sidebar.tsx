@@ -44,19 +44,19 @@ const data = {
       items: [
         {
           title: "写文章",
-          url: "/dashboard/posts/create",
+          url: "/dashboard/articles/create",
         },
         {
           title: "所有文章",
-          url: "/dashboard/posts",
+          url: "/dashboard/articles",
         },
         {
           title: "草稿箱",
-          url: "/dashboard/posts/drafts",
+          url: "/dashboard/articles/drafts",
         },
         {
           title: "已发布",
-          url: "/dashboard/posts/published",
+          url: "/dashboard/articles/published",
         },
       ],
     },
