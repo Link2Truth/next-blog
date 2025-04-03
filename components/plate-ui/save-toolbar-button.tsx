@@ -9,7 +9,6 @@ import {
   AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
-  AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
@@ -21,7 +20,6 @@ import { ToolbarButton } from "./toolbar";
 export function SaveToolbarButton() {
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
 
   return (
     <>
@@ -30,25 +28,23 @@ export function SaveToolbarButton() {
         <span>保存</span>
       </ToolbarButton>
 
-      {/* 仅在客户端渲染Dialog */}
-
       <AlertDialog open={open} onOpenChange={setOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>保存文章</AlertDialogTitle>
           </AlertDialogHeader>
-          <AlertDialogDescription className="group relative w-full">
+
+          <div className="group relative w-full">
             <FloatingInput
               id="title"
               className="w-full"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               label="标题"
-              placeholder="标题"
               type="text"
-              autoFocus
             />
-          </AlertDialogDescription>
+          </div>
+
           <AlertDialogFooter>
             <AlertDialogCancel>取消</AlertDialogCancel>
             <AlertDialogAction>确定</AlertDialogAction>
