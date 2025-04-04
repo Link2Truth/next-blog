@@ -41,64 +41,16 @@ const data = {
     {
       title: "内容管理",
       url: "#",
+
       items: [
         {
           title: "写文章",
           url: "/dashboard/articles/create",
+          isActive: true,
         },
         {
           title: "所有文章",
           url: "/dashboard/articles",
-        },
-        {
-          title: "草稿箱",
-          url: "/dashboard/articles/drafts",
-        },
-        {
-          title: "已发布",
-          url: "/dashboard/articles/published",
-        },
-      ],
-    },
-    {
-      title: "评论管理",
-      url: "/dashboard/comments",
-
-      items: [
-        {
-          title: "所有评论",
-          url: "/dashboard/comments",
-        },
-        {
-          title: "待审核",
-          url: "/dashboard/comments/pending",
-        },
-        {
-          title: "已批准",
-          url: "/dashboard/comments/approved",
-        },
-        {
-          title: "垃圾评论",
-          url: "/dashboard/comments/spam",
-        },
-      ],
-    },
-    {
-      title: "用户管理",
-      url: "/dashboard/users",
-      items: [
-        {
-          title: "所有用户",
-          url: "/dashboard/users",
-          isActive: true,
-        },
-        {
-          title: "添加用户",
-          url: "/dashboard/users/new",
-        },
-        {
-          title: "个人资料",
-          url: "/dashboard/profile",
         },
       ],
     },
