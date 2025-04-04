@@ -45,7 +45,7 @@ const data = {
       items: [
         {
           title: "写文章",
-          url: "/api/v1/articles/create",
+          url: "/dashboard/articles/create",
           isActive: true,
         },
         {
