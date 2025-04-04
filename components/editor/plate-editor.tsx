@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef } from "react";
 
 import { SettingsDialog } from "@/components/editor/settings";
 import { useCreateEditor } from "@/components/editor/use-create-editor";
@@ -15,10 +15,12 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 
 export function PlateEditor() {
   const searchParams = useSearchParams();
-  const [value, setValue] = useState<Value>([]);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
-
   const supabase = createClient();
+  const editor = useCreateEditor({
+    value: [],
+  });
+
   useEffect(() => {
     const fetchArticle = async () => {
       if (!searchParams.get("id")) return;
@@ -34,15 +36,12 @@ export function PlateEditor() {
       }
 
       if (data) {
-        // TODO: fetch到数据，但是初始化内容没有生效
-        setValue(JSON.parse(data.content));
+        editor.tf.setValue(JSON.parse(data.content));
       }
     };
     fetchArticle();
   }, []);
-  const editor = useCreateEditor({
-    value: value,
-  });
+
   // 保存文章内容函数
   const saveContent = async (value: string) => {
     const {
