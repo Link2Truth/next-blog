@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { SettingsDialog } from "@/components/editor/settings";
 import { useCreateEditor } from "@/components/editor/use-create-editor";
@@ -9,57 +9,71 @@ import { createClient } from "@/lib/supabase/client";
 
 import { type Value } from "@udecode/plate";
 import { Plate } from "@udecode/plate/react";
+import { useSearchParams } from "next/navigation";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 
 export function PlateEditor() {
-  const value: Value = [];
-  const [articleId, setArticleId] = useState(undefined);
+  const searchParams = useSearchParams();
+  const [value, setValue] = useState<Value>([]);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+  const supabase = createClient();
+  useEffect(() => {
+    const fetchArticle = async () => {
+      if (!searchParams.get("id")) return;
+      const { data, error } = await supabase
+        .from("articles")
+        .select()
+        .eq("id", searchParams.get("id"))
+        .single();
+
+      if (error) {
+        console.error("Error fetching article:", error);
+        return;
+      }
+
+      if (data) {
+        // TODO: fetch到数据，但是初始化内容没有生效
+        setValue(JSON.parse(data.content));
+      }
+    };
+    fetchArticle();
+  }, []);
   const editor = useCreateEditor({
     value: value,
   });
-  const supabase = createClient();
-
   // 保存文章内容函数
   const saveContent = async (value: string) => {
     const {
       data: { user },
     } = await supabase.auth.getUser();
-    const { data, error } = await supabase
-      .from("articles")
-      .upsert({
-        id: articleId,
-        title: "untitled",
-        content: value,
-        is_published: false,
-        auther_id: user?.id,
-        updated_at: new Date(),
-      })
-      .select();
+    const { error } = await supabase.from("articles").upsert({
+      id: searchParams.get("id"),
+      title: "untitled",
+      content: value,
+      is_published: false,
+      auther_id: user?.id,
+      updated_at: new Date(),
+    });
+
     if (error) {
       console.error("Error saving article:", error);
       return;
-    }
-    if (articleId === undefined) {
-      setArticleId(data?.[0]?.id);
     }
     console.log("Article saved");
   };
 
   // 实现debounce，延迟1秒执行保存操作
-  const debouncedSaveContent = useCallback(
-    (value: string) => {
-      if (timerRef.current) {
-        clearTimeout(timerRef.current);
-      }
+  const debouncedSaveContent = useCallback((value: string) => {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+    }
 
-      timerRef.current = setTimeout(() => {
-        saveContent(value);
-      }, 1000);
-    },
-    [articleId],
-  ); // 依赖 articleId，因为它在 saveContent 中使用
+    timerRef.current = setTimeout(() => {
+      saveContent(value);
+    }, 1000);
+  }, []);
 
   const handleChange = ({ value }: { value: Value }) => {
     console.log("Editor value changed");
