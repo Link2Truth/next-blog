@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useRef, useState } from "react";
 
 import { SettingsDialog } from "@/components/editor/settings";
 import { useCreateEditor } from "@/components/editor/use-create-editor";
@@ -15,11 +15,12 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 export function PlateEditor() {
   const value: Value = [];
   const [articleId, setArticleId] = useState(undefined);
-
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
   const editor = useCreateEditor({
     value: value,
   });
   const supabase = createClient();
+
   // 保存文章内容函数
   const saveContent = async (value: string) => {
     const {
@@ -46,9 +47,23 @@ export function PlateEditor() {
     console.log("Article saved");
   };
 
+  // 实现debounce，延迟1秒执行保存操作
+  const debouncedSaveContent = useCallback(
+    (value: string) => {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
+
+      timerRef.current = setTimeout(() => {
+        saveContent(value);
+      }, 1000);
+    },
+    [articleId],
+  ); // 依赖 articleId，因为它在 saveContent 中使用
+
   const handleChange = ({ value }: { value: Value }) => {
     console.log("Editor value changed");
-    saveContent(JSON.stringify(value));
+    debouncedSaveContent(JSON.stringify(value));
   };
 
   return (
