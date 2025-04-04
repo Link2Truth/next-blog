@@ -1,8 +1,18 @@
 import { updateSession } from "@/lib/supabase/middleware";
 
-import { type NextRequest } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 
 export async function middleware(request: NextRequest) {
+  if (
+    request.nextUrl.pathname === "/dashboard/articles/create" &&
+    !request.nextUrl.searchParams.has("id")
+  ) {
+    // 生成UUID并构建新URL
+    const uuid = crypto.randomUUID();
+    const url = new URL(request.url);
+    url.searchParams.set("id", uuid);
+    return NextResponse.redirect(url);
+  }
   // update user's auth session
   return await updateSession(request);
 }
