@@ -1,16 +1,9 @@
-import { PlateEditor } from "@/components/editor/plate-editor";
-import { SettingsProvider } from "@/components/editor/settings";
-
-import { Toaster } from "sonner";
+import { ArticleTable } from "@/components/article-table";
 
 export default function Page() {
   return (
-    <div className="h-screen w-full" data-registry="plate">
-      <SettingsProvider>
-        <PlateEditor />
-      </SettingsProvider>
-
-      <Toaster />
+    <div className="h-full w-full border rounded-md p-4 shadow">
+      <ArticleTable />
     </div>
   );
 }
