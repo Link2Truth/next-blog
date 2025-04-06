@@ -44,15 +44,10 @@ export function PlateEditor() {
 
   // 保存文章内容函数
   const saveContent = async (value: string) => {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
     const { error } = await supabase.from("articles").upsert({
       id: searchParams.get("id"),
       title: "untitled",
       content: value,
-      is_published: false,
-      auther_id: user?.id,
       updated_at: new Date(),
     });
 
