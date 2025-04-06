@@ -50,18 +50,18 @@ export async function GET(request: NextRequest) {
   );
 }
 
+// TODO: upsert改为insert,返回id
 export async function POST(request: NextRequest) {
-  const article = await request.json();
   const supabase = await createClient();
-  const { data, error } = await supabase
-    .from("articles")
-    .insert(article)
-    .select()
-    .single();
-
+  const article = await request.json();
+  console.log("article:", article);
+  const { error } = await supabase.from("articles").upsert(article);
   if (error) {
-    return new NextResponse(JSON.stringify({ error }), { status: 500 });
+    console.error("Error inserting article:", error);
+    return NextResponse.json(
+      { error: "Error inserting article" },
+      { status: 500 },
+    );
   }
-
-  return new NextResponse(JSON.stringify(data), { status: 201 });
+  return NextResponse.json({ message: "ok" }, { status: 200 });
 }

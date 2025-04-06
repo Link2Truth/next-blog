@@ -41,21 +41,26 @@ export function PlateEditor() {
     };
     fetchArticle();
   }, []);
-
-  // 保存文章内容函数
+  // TODO: 封装？
   const saveContent = async (value: string) => {
-    const { error } = await supabase.from("articles").upsert({
-      id: searchParams.get("id"),
-      title: "untitled",
-      content: value,
-      updated_at: new Date(),
+    fetch("/api/v1/articles", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id: searchParams.get("id"),
+        title: "untitled",
+        content: value,
+        updated_at: new Date(),
+      }),
+    }).then((response) => {
+      console.log("response:", response);
+      if (!response.ok) {
+        throw new Error("Saving article failed!");
+      }
+      console.log("Article saved");
     });
-
-    if (error) {
-      console.error("Error saving article:", error);
-      return;
-    }
-    console.log("Article saved");
   };
 
   // 实现debounce，延迟1秒执行保存操作
