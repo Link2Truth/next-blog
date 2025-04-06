@@ -1,8 +1,9 @@
 "use client";
 
-import { useId, useMemo, useState } from "react";
+import { useEffect, useId, useMemo, useState } from "react";
 
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -21,6 +22,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { getArticles } from "@/lib/api/articles";
 import { cn } from "@/lib/utils";
 
 import {
@@ -40,8 +42,6 @@ import {
 } from "@tanstack/react-table";
 import { ChevronDownIcon, ChevronUpIcon, SearchIcon } from "lucide-react";
 
-import { Button } from "./ui/button";
-
 declare module "@tanstack/react-table" {
   //allows us to define custom properties for our columns
   interface ColumnMeta<TData extends RowData, TValue> {
@@ -52,8 +52,8 @@ declare module "@tanstack/react-table" {
 type Item = {
   id: string;
   title: string;
-  auther: string;
-  status: "草稿" | "已发布";
+  author: string;
+  is_published: boolean;
   updated_at: string;
 };
 
@@ -87,24 +87,24 @@ const columns: ColumnDef<Item>[] = [
   },
   {
     header: "作者",
-    accessorKey: "auther",
+    accessorKey: "author",
     cell: ({ row }) => (
-      <div className="font-medium">{row.getValue("auther")} </div>
+      <div className="font-medium">{row.getValue("author")} </div>
     ),
     enableSorting: true,
   },
   {
     header: "发布状态",
-    accessorKey: "status",
+    accessorKey: "is_published",
     cell: ({ row }) => (
       <Badge
         className={cn(
           "h-8 w-14 flex items-center",
-          row.getValue("status") === "已发布" &&
+          row.getValue("is_published") === true &&
             "bg-muted-foreground/60 text-primary-foreground",
         )}
       >
-        {row.getValue("status")}
+        {row.getValue("is_published") ? "已发布" : "未发布"}
       </Badge>
     ),
     enableSorting: false,
@@ -134,24 +134,8 @@ const columns: ColumnDef<Item>[] = [
   },
 ];
 
-const items: Item[] = [
-  {
-    id: "1",
-    title: "untitled1",
-    auther: "auther1",
-    status: "已发布",
-    updated_at: "2023-10-01",
-  },
-  {
-    id: "2",
-    title: "untitled2",
-    auther: "auther2",
-    status: "草稿",
-    updated_at: "2023-10-01",
-  },
-];
-
 export function ArticleTable() {
+  const [items, setItems] = useState<Item[]>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = useState<SortingState>([
     {
@@ -177,7 +161,32 @@ export function ArticleTable() {
     onSortingChange: setSorting,
     enableSortingRemoval: false,
   });
-
+  useEffect(() => {
+    getArticles(1, 5)
+      .then((res) => {
+        // TODO time format
+        setItems(
+          res.data.map(
+            (item: {
+              id: string;
+              is_published: boolean;
+              profiles: { username: string };
+              title: string;
+              updated_at: string;
+            }) => ({
+              id: item.id,
+              title: item.title,
+              is_published: item.is_published,
+              updated_at: new Date(item.updated_at).toISOString(),
+              author: item.profiles.username,
+            }),
+          ),
+        );
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
   return (
     <div className="space-y-6">
       {/* Filters */}
@@ -188,7 +197,7 @@ export function ArticleTable() {
         </div>
         {/* 发布状态 */}
         <div className="w-36">
-          <Filter column={table.getColumn("status")!} />
+          <Filter column={table.getColumn("is_published")!} />
         </div>
       </div>
 

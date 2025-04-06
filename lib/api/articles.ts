@@ -3,7 +3,7 @@ import { type Database } from "@/lib/supabase/types";
 type Article = Database["public"]["Tables"]["articles"]["Insert"];
 
 async function createArticle(article: Article) {
-  return await fetch("/api/articles", {
+  return await fetch("/api/v1/articles", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -18,7 +18,7 @@ async function createArticle(article: Article) {
 }
 
 async function getArticles(page: number, pageSize: number) {
-  return await fetch(`/api/articles?page=${page}&pageSize=${pageSize}`).then(
+  return await fetch(`/api/v1/articles?page=${page}&pageSize=${pageSize}`).then(
     (response) => {
       if (!response.ok) {
         throw new Error("Failed to fetch articles");
@@ -29,7 +29,7 @@ async function getArticles(page: number, pageSize: number) {
 }
 
 async function getArticle(id: string) {
-  return await fetch(`/api/articles/${id}`).then((response) => {
+  return await fetch(`/api/v1/articles/${id}`).then((response) => {
     if (!response.ok) {
       throw new Error("Failed to fetch article");
     }
@@ -38,7 +38,7 @@ async function getArticle(id: string) {
 }
 
 async function updateArticle(id: string, article: Article) {
-  return await fetch(`/api/articles/${id}`, {
+  return await fetch(`/api/v1/articles/${id}`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
@@ -53,7 +53,7 @@ async function updateArticle(id: string, article: Article) {
 }
 
 async function deleteArticle(id: string) {
-  return await fetch(`/api/articles/${id}`, {
+  return await fetch(`/api/v1/articles/${id}`, {
     method: "DELETE",
   }).then((response) => {
     if (!response.ok) {
