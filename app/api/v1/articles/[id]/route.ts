@@ -15,9 +15,17 @@ export async function GET(
     .single();
 
   if (error) {
-    return new NextResponse(JSON.stringify({ error }), { status: 500 });
+    return new NextResponse(
+      JSON.stringify({ message: "查询失败：" + error.message, data: null }),
+      {
+        status: 500,
+      },
+    );
   }
-  return new NextResponse(JSON.stringify(data), { status: 200 });
+  return new NextResponse(
+    JSON.stringify({ message: "查询成功！", data: data }),
+    { status: 200 },
+  );
 }
 
 export async function DELETE(
@@ -28,10 +36,13 @@ export async function DELETE(
   const supabase = await createClient();
   const { error } = await supabase.from("articles").delete().eq("id", id);
   if (error) {
-    return new NextResponse(JSON.stringify({ error }), { status: 500 });
+    return new NextResponse(
+      JSON.stringify({ message: "删除失败：" + error.message, data: null }),
+      { status: 500 },
+    );
   }
   return new NextResponse(
-    JSON.stringify({ message: "Article deleted successfully" }),
+    JSON.stringify({ message: "删除成功！", data: null }),
     {
       status: 200,
     },
@@ -43,37 +54,27 @@ export async function PATCH(
   { params }: { params: { id: string } },
 ) {
   const { id } = await params;
-  const updates = await request.json();
+  const article = await request.json();
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("articles")
-    .upsert(updates)
+    .update(article)
+    .eq("id", id)
     .select()
     .single();
 
   if (error) {
-    return new NextResponse(JSON.stringify({ error }), { status: 500 });
+    return new NextResponse(
+      JSON.stringify({ message: "更新失败：" + error.message, data: data }),
+      {
+        status: 500,
+      },
+    );
   }
-  console.log("data:", data);
-  return new NextResponse(JSON.stringify(data), { status: 200 });
-}
-
-export async function PUT(
-  request: NextRequest,
-  { params }: { params: { id: string } },
-) {
-  const { id } = await params;
-  const updates = await request.json();
-  const supabase = await createClient();
-  const { data, error } = await supabase
-    .from("articles")
-    .upsert(updates)
-    .select()
-    .single();
-
-  if (error) {
-    return new NextResponse(JSON.stringify({ error }), { status: 500 });
-  }
-
-  return new NextResponse(JSON.stringify(data), { status: 200 });
+  return new NextResponse(
+    JSON.stringify({ message: "更新成功！", data: data }),
+    {
+      status: 200,
+    },
+  );
 }

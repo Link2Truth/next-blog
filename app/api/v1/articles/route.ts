@@ -6,13 +6,10 @@ export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const page = parseInt(searchParams.get("page") || "1");
   const pageSize = parseInt(searchParams.get("pageNum") || "10");
-
   // 计算起始索引
   const from = (page - 1) * pageSize;
   const to = from + pageSize - 1;
-
   const supabase = await createClient();
-
   // 获取总数和分页数据
   const countPromise = supabase
     .from("articles")
@@ -22,7 +19,7 @@ export async function GET(request: NextRequest) {
     .from("articles")
     .select("*")
     .range(from, to)
-    .order("created_at", { ascending: false });
+    .order("updated_at", { ascending: false });
 
   const [countResult, dataResult] = await Promise.all([
     countPromise,
@@ -30,14 +27,21 @@ export async function GET(request: NextRequest) {
   ]);
 
   if (countResult.error || dataResult.error) {
+    console.error(countResult.error, dataResult.error);
     return new NextResponse(
-      JSON.stringify({ error: countResult.error || dataResult.error }),
+      JSON.stringify({
+        message:
+          "查询失败：" + countResult.error?.message ||
+          dataResult.error?.message,
+        data: null,
+      }),
       { status: 500 },
     );
   }
 
   return new NextResponse(
     JSON.stringify({
+      message: "查询成功！",
       data: dataResult.data,
       pagination: {
         total: countResult.count,
@@ -50,18 +54,24 @@ export async function GET(request: NextRequest) {
   );
 }
 
-// TODO: upsert改为insert,返回id
 export async function POST(request: NextRequest) {
   const supabase = await createClient();
   const article = await request.json();
-  console.log("article:", article);
-  const { error } = await supabase.from("articles").upsert(article);
+  const { data, error } = await supabase
+    .from("articles")
+    .insert(article)
+    .select()
+    .single();
   if (error) {
-    console.error("Error inserting article:", error);
-    return NextResponse.json(
-      { error: "Error inserting article" },
+    return new NextResponse(
+      JSON.stringify({ message: "创建失败：" + error.message, data: null }),
       { status: 500 },
     );
   }
-  return NextResponse.json({ message: "ok" }, { status: 200 });
+  return new NextResponse(
+    JSON.stringify({ message: "创建成功！", data: data }),
+    {
+      status: 200,
+    },
+  );
 }
