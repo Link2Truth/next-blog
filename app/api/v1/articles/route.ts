@@ -27,7 +27,6 @@ export async function GET(request: NextRequest) {
   ]);
 
   if (countResult.error || dataResult.error) {
-    console.error(countResult.error, dataResult.error);
     return new NextResponse(
       JSON.stringify({
         message:
