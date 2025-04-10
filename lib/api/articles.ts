@@ -1,7 +1,7 @@
 import { type Database } from "@/lib/supabase/types";
 
 type Article = Database["public"]["Tables"]["articles"]["Insert"];
-
+// TODO 使用axios封装请求，替换fetch
 async function createArticle(article: Article) {
   return await fetch("/api/v1/articles", {
     method: "POST",
