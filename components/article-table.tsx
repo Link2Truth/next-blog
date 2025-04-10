@@ -49,6 +49,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import { format } from "date-fns";
 import { ChevronDownIcon, ChevronUpIcon, SearchIcon } from "lucide-react";
 import Link from "next/link";
 
@@ -153,9 +154,7 @@ const columns: ColumnDef<Item>[] = [
     ),
   },
 ];
-function handleEditTitle(id: string) {
-  console.log("edit title", id);
-}
+
 async function fetchTableData(page: number, pageSize: number): Promise<Item[]> {
   return getArticles(page, pageSize)
     .then((response) => {
@@ -170,7 +169,7 @@ async function fetchTableData(page: number, pageSize: number): Promise<Item[]> {
           id: item.id,
           title: item.title,
           is_published: item.is_published,
-          updated_at: new Date(item.updated_at).toISOString(), // TODO time format
+          updated_at: format(new Date(item.updated_at), "yyyy-MM-dd HH:mm:ss"),
           author: item.profiles.username,
         }),
       );
