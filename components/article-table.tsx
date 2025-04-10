@@ -41,6 +41,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { ChevronDownIcon, ChevronUpIcon, SearchIcon } from "lucide-react";
+import Link from "next/link";
 
 declare module "@tanstack/react-table" {
   //allows us to define custom properties for our columns
@@ -82,7 +83,14 @@ const columns: ColumnDef<Item>[] = [
     header: "标题",
     accessorKey: "title",
     cell: ({ row }) => (
-      <div className="font-medium">{row.getValue("title")}</div>
+      <div className="font-medium">
+        <Link
+          href={"/dashboard/articles/" + row.original.id}
+          className="underline hover:decoration-2 hover:underline-offset-2"
+        >
+          {row.getValue("title")}
+        </Link>
+      </div>
     ),
   },
   {
