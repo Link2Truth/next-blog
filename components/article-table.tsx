@@ -5,6 +5,15 @@ import { useEffect, useId, useMemo, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -86,7 +95,7 @@ const columns: ColumnDef<Item>[] = [
       <div className="font-medium">
         <Link
           href={"/dashboard/articles/" + row.original.id}
-          className="underline hover:decoration-2 hover:underline-offset-2"
+          className="underline hover:underline-offset-2"
         >
           {row.getValue("title")}
         </Link>
@@ -100,6 +109,17 @@ const columns: ColumnDef<Item>[] = [
       <div className="font-medium">{row.getValue("author")} </div>
     ),
     enableSorting: true,
+  },
+
+  {
+    header: "更新时间",
+    accessorKey: "updated_at",
+    cell: ({ row }) => (
+      <div className="font-medium">{row.getValue("updated_at")} </div>
+    ),
+    // meta: {
+    //   filterVariant: "range",
+    // },
   },
   {
     header: "发布状态",
@@ -121,35 +141,44 @@ const columns: ColumnDef<Item>[] = [
     },
   },
   {
-    header: "更新时间",
-    accessorKey: "updated_at",
-    cell: ({ row }) => (
-      <div className="font-medium">{row.getValue("updated_at")} </div>
-    ),
-    // meta: {
-    //   filterVariant: "range",
-    // },
-  },
-  {
     header: "操作",
     accessorKey: "operations",
-    cell: ({ row }) => (
+    cell: ({ row, table }) => (
       <div className="space-x-2">
-        <Button variant="outline" onClick={() => handleEdit(row.original.id)}>
-          编辑
-        </Button>
-        <Button onClick={() => handleDelete(row.original.id)}>删除</Button>
+        <DeleteDialog
+          id={row.original.id}
+          onDelete={(table.options.meta as any)?.refreshData}
+        />
       </div>
     ),
   },
 ];
-
-function handleEdit(id: string) {
-  console.log("edit", id);
+function handleEditTitle(id: string) {
+  console.log("edit title", id);
 }
-
-function handleDelete(id: string) {
-  console.log("delete", id);
+async function fetchTableData(page: number, pageSize: number): Promise<Item[]> {
+  return getArticles(page, pageSize)
+    .then((response) => {
+      return response.data.map(
+        (item: {
+          id: string;
+          is_published: boolean;
+          profiles: { username: string };
+          title: string;
+          updated_at: string;
+        }) => ({
+          id: item.id,
+          title: item.title,
+          is_published: item.is_published,
+          updated_at: new Date(item.updated_at).toISOString(), // TODO time format
+          author: item.profiles.username,
+        }),
+      );
+    })
+    .catch((error) => {
+      console.log(error);
+      return []; // 发生错误时返回空数组
+    });
 }
 
 export function ArticleTable() {
@@ -161,32 +190,12 @@ export function ArticleTable() {
       desc: false,
     },
   ]);
-  const fetchTableData = (page: number, pageSize: number) => {
-    getArticles(page, pageSize)
-      .then((res) => {
-        // TODO time format
-        setItems(
-          res.data.map(
-            (item: {
-              id: string;
-              is_published: boolean;
-              profiles: { username: string };
-              title: string;
-              updated_at: string;
-            }) => ({
-              id: item.id,
-              title: item.title,
-              is_published: item.is_published,
-              updated_at: new Date(item.updated_at).toISOString(),
-              author: item.profiles.username,
-            }),
-          ),
-        );
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+
+  // 添加刷新数据的函数
+  const refreshData = () => {
+    fetchTableData(1, 10).then((data) => setItems(data));
   };
+
   const table = useReactTable({
     data: items,
     columns,
@@ -203,10 +212,14 @@ export function ArticleTable() {
     getFacetedMinMaxValues: getFacetedMinMaxValues(), // generate min/max values for range filter
     onSortingChange: setSorting,
     enableSortingRemoval: false,
+    meta: {
+      refreshData, // 将刷新函数传入table.meta
+    },
   });
   useEffect(() => {
-    fetchTableData(1, 10);
+    refreshData();
   }, []);
+
   return (
     <div className="space-y-6">
       {/* Filters */}
@@ -424,5 +437,34 @@ function Filter({ column }: { column: Column<any, unknown> }) {
         </div>
       </div>
     </div>
+  );
+}
+function DeleteDialog({ id, onDelete }: { id: string; onDelete: () => void }) {
+  const [open, setOpen] = useState(false);
+  const handleDelete = () => {
+    deleteArticle(id).then(() => {
+      onDelete();
+      setOpen(false);
+    });
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button variant="outline">删除</Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>删除文章</DialogTitle>
+          <DialogDescription>
+            删除文章后将无法恢复，确认删除文章？
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
+          <Button variant="outline">取消</Button>
+          <Button onClick={handleDelete}>确认</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }
