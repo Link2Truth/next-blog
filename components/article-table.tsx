@@ -22,7 +22,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { getArticles } from "@/lib/api/articles";
+import { deleteArticle, getArticles } from "@/lib/api/articles";
 import { cn } from "@/lib/utils";
 
 import {
@@ -135,12 +135,22 @@ const columns: ColumnDef<Item>[] = [
     accessorKey: "operations",
     cell: ({ row }) => (
       <div className="space-x-2">
-        <Button variant="outline">编辑</Button>
-        <Button>删除</Button>
+        <Button variant="outline" onClick={() => handleEdit(row.original.id)}>
+          编辑
+        </Button>
+        <Button onClick={() => handleDelete(row.original.id)}>删除</Button>
       </div>
     ),
   },
 ];
+
+function handleEdit(id: string) {
+  console.log("edit", id);
+}
+
+function handleDelete(id: string) {
+  console.log("delete", id);
+}
 
 export function ArticleTable() {
   const [items, setItems] = useState<Item[]>([]);
@@ -151,26 +161,8 @@ export function ArticleTable() {
       desc: false,
     },
   ]);
-
-  const table = useReactTable({
-    data: items,
-    columns,
-    state: {
-      sorting,
-      columnFilters,
-    },
-    onColumnFiltersChange: setColumnFilters,
-    getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(), //client-side filtering
-    getSortedRowModel: getSortedRowModel(),
-    getFacetedRowModel: getFacetedRowModel(), // client-side faceting
-    getFacetedUniqueValues: getFacetedUniqueValues(), // generate unique values for select filter/autocomplete
-    getFacetedMinMaxValues: getFacetedMinMaxValues(), // generate min/max values for range filter
-    onSortingChange: setSorting,
-    enableSortingRemoval: false,
-  });
-  useEffect(() => {
-    getArticles(1, 5)
+  const fetchTableData = (page: number, pageSize: number) => {
+    getArticles(page, pageSize)
       .then((res) => {
         // TODO time format
         setItems(
@@ -194,6 +186,26 @@ export function ArticleTable() {
       .catch((error) => {
         console.log(error);
       });
+  };
+  const table = useReactTable({
+    data: items,
+    columns,
+    state: {
+      sorting,
+      columnFilters,
+    },
+    onColumnFiltersChange: setColumnFilters,
+    getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(), //client-side filtering
+    getSortedRowModel: getSortedRowModel(),
+    getFacetedRowModel: getFacetedRowModel(), // client-side faceting
+    getFacetedUniqueValues: getFacetedUniqueValues(), // generate unique values for select filter/autocomplete
+    getFacetedMinMaxValues: getFacetedMinMaxValues(), // generate min/max values for range filter
+    onSortingChange: setSorting,
+    enableSortingRemoval: false,
+  });
+  useEffect(() => {
+    fetchTableData(1, 10);
   }, []);
   return (
     <div className="space-y-6">
