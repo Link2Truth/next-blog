@@ -24,27 +24,29 @@ export function PlateEditor({ articleId }: PlateEditorProps) {
 
   useEffect(() => {
     const fetchArticle = async () => {
-      if (!articleId) {
-        createArticle({
-          id: articleId,
-          title: "untitled",
-          content: [],
-          updated_at: new Date().toISOString(),
-        });
-        return;
-      }
+      if (!articleId) return;
+
       getArticle(articleId)
         .then((response) => {
-          if (response.error) {
-            throw new Error(response.error.message);
+          if (response.data?.content) {
+            editor.tf.setValue(JSON.parse(response.data.content));
           }
-          editor.tf.setValue(JSON.parse(response.data.content));
         })
         .catch((error) => {
-          console.error("Error fetching article:", error);
+          console.error(error);
+          if (error.message === "Article not found") {
+            createArticle({
+              id: articleId,
+              title: "untitled",
+              content: null,
+              updated_at: new Date().toISOString(),
+            }).catch((error) => {
+              throw new Error(error.message);
+            });
+          }
         });
     };
-    fetchArticle();
+    fetchArticle(); //FIXME 函数重复调用
   }, []);
 
   // 实现debounce，延迟1秒执行保存操作

@@ -31,6 +31,9 @@ async function getArticles(page: number, pageSize: number) {
 async function getArticle(id: string) {
   return await fetch(`/api/v1/articles/${id}`).then((response) => {
     if (!response.ok) {
+      if (response.status === 404) {
+        throw new Error("Article not found");
+      }
       throw new Error("Failed to fetch article");
     }
     return response.json();

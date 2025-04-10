@@ -15,6 +15,13 @@ export async function GET(
     .single();
 
   if (error) {
+    if (error.code === "PGRST116") {
+      return new NextResponse(
+        JSON.stringify({ message: "查询失败：" + error.message, data: null }),
+        { status: 404 },
+      );
+    }
+
     return new NextResponse(
       JSON.stringify({ message: "查询失败：" + error.message, data: null }),
       {
