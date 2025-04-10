@@ -28,7 +28,9 @@ import {
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
@@ -244,11 +246,6 @@ export function ArticleTable() {
     refreshData(currentPage, pageSize);
   }, [currentPage, pageSize]);
 
-  // 处理页面变化
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
-
   return (
     <div className="space-y-6">
       {/* Filters */}
@@ -362,8 +359,10 @@ export function ArticleTable() {
       <div className="flex justify-center items-center bg-background absolute bottom-0 left-0 right-0 p-2">
         <TablePagination
           currentPage={currentPage}
+          pageSize={pageSize}
           totalPages={totalPages}
-          onPageChange={handlePageChange}
+          onPageChange={setCurrentPage}
+          onPageSizeChange={setPageSize}
         />
       </div>
     </div>
@@ -509,12 +508,16 @@ function DeleteDialog({ id, onDelete }: { id: string; onDelete: () => void }) {
 
 function TablePagination({
   currentPage,
+  pageSize,
   totalPages,
   onPageChange,
+  onPageSizeChange,
 }: {
   currentPage: number;
+  pageSize: number;
   totalPages: number;
   onPageChange: (page: number) => void;
+  onPageSizeChange: (size: number) => void;
 }) {
   // 计算要显示的页码范围
   const getPageNumbers = () => {
@@ -538,62 +541,84 @@ function TablePagination({
   };
 
   return (
-    <Pagination>
-      <PaginationContent>
-        <PaginationItem>
-          <PaginationPrevious
-            onClick={() => currentPage > 1 && onPageChange(currentPage - 1)}
-            className={
-              currentPage <= 1
-                ? "pointer-events-none opacity-50"
-                : "cursor-pointer"
-            }
-            aria-disabled={currentPage <= 1}
-          />
-        </PaginationItem>
+    <div className="flex">
+      <Select
+        value={pageSize.toString()}
+        onValueChange={(value) => {
+          onPageSizeChange(Number(value));
+          onPageChange(1); // 切换每页数量后回到第一页
+        }}
+      >
+        <SelectTrigger className="w-[150px]">
+          <SelectValue placeholder="每页数量" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectGroup>
+            <SelectItem value="10">10/每页</SelectItem>
+            <SelectItem value="20">20/每页</SelectItem>
+            <SelectItem value="50">50/每页</SelectItem>
+            <SelectItem value="100">100/每页</SelectItem>
+          </SelectGroup>
+        </SelectContent>
+      </Select>
 
-        {getPageNumbers().map((page) => (
-          <PaginationItem key={page}>
-            <PaginationLink
-              onClick={() => onPageChange(page)}
-              isActive={page === currentPage}
-              className="cursor-pointer"
-            >
-              {page}
-            </PaginationLink>
+      <Pagination>
+        <PaginationContent>
+          <PaginationItem>
+            <PaginationPrevious
+              onClick={() => currentPage > 1 && onPageChange(currentPage - 1)}
+              className={
+                currentPage <= 1
+                  ? "pointer-events-none opacity-50"
+                  : "cursor-pointer"
+              }
+              aria-disabled={currentPage <= 1}
+            />
           </PaginationItem>
-        ))}
 
-        {totalPages > getPageNumbers()[getPageNumbers().length - 1] && (
-          <>
-            <PaginationItem>
-              <PaginationEllipsis />
-            </PaginationItem>
-            <PaginationItem>
+          {getPageNumbers().map((page) => (
+            <PaginationItem key={page}>
               <PaginationLink
-                onClick={() => onPageChange(totalPages)}
+                onClick={() => onPageChange(page)}
+                isActive={page === currentPage}
                 className="cursor-pointer"
               >
-                {totalPages}
+                {page}
               </PaginationLink>
             </PaginationItem>
-          </>
-        )}
+          ))}
 
-        <PaginationItem>
-          <PaginationNext
-            onClick={() =>
-              currentPage < totalPages && onPageChange(currentPage + 1)
-            }
-            className={
-              currentPage >= totalPages
-                ? "pointer-events-none opacity-50"
-                : "cursor-pointer"
-            }
-            aria-disabled={currentPage >= totalPages}
-          />
-        </PaginationItem>
-      </PaginationContent>
-    </Pagination>
+          {totalPages > getPageNumbers()[getPageNumbers().length - 1] && (
+            <>
+              <PaginationItem>
+                <PaginationEllipsis />
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationLink
+                  onClick={() => onPageChange(totalPages)}
+                  className="cursor-pointer"
+                >
+                  {totalPages}
+                </PaginationLink>
+              </PaginationItem>
+            </>
+          )}
+
+          <PaginationItem>
+            <PaginationNext
+              onClick={() =>
+                currentPage < totalPages && onPageChange(currentPage + 1)
+              }
+              className={
+                currentPage >= totalPages
+                  ? "pointer-events-none opacity-50"
+                  : "cursor-pointer"
+              }
+              aria-disabled={currentPage >= totalPages}
+            />
+          </PaginationItem>
+        </PaginationContent>
+      </Pagination>
+    </div>
   );
 }
