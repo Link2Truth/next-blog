@@ -17,6 +17,15 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -155,10 +164,13 @@ const columns: ColumnDef<Item>[] = [
   },
 ];
 
-async function fetchTableData(page: number, pageSize: number): Promise<Item[]> {
+async function fetchTableData(
+  page: number,
+  pageSize: number,
+): Promise<{ items: Item[]; totalPages: number }> {
   return getArticles(page, pageSize)
     .then((response) => {
-      return response.data.map(
+      const items = response.data.map(
         (item: {
           id: string;
           is_published: boolean;
@@ -173,10 +185,16 @@ async function fetchTableData(page: number, pageSize: number): Promise<Item[]> {
           author: item.profiles.username,
         }),
       );
+
+      // 假设API返回总页数，如果没有则使用默认值
+      const totalPages =
+        response.totalPages || Math.ceil(response.count / pageSize) || 1;
+
+      return { items, totalPages };
     })
     .catch((error) => {
       console.log(error);
-      return []; // 发生错误时返回空数组
+      return { items: [], totalPages: 1 }; // 发生错误时返回空数组
     });
 }
 
@@ -189,10 +207,17 @@ export function ArticleTable() {
       desc: false,
     },
   ]);
+  // 添加分页状态
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [pageSize, setPageSize] = useState<number>(10);
+  const [totalPages, setTotalPages] = useState<number>(1);
 
   // 添加刷新数据的函数
-  const refreshData = () => {
-    fetchTableData(1, 10).then((data) => setItems(data));
+  const refreshData = (page: number, pageSize: number) => {
+    fetchTableData(page, pageSize).then((data) => {
+      setItems(data.items || []);
+      setTotalPages(data.totalPages || 1);
+    });
   };
 
   const table = useReactTable({
@@ -216,8 +241,13 @@ export function ArticleTable() {
     },
   });
   useEffect(() => {
-    refreshData();
-  }, []);
+    refreshData(currentPage, pageSize);
+  }, [currentPage, pageSize]);
+
+  // 处理页面变化
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
 
   return (
     <div className="space-y-6">
@@ -327,6 +357,15 @@ export function ArticleTable() {
           )}
         </TableBody>
       </Table>
+
+      {/* 添加分页组件 */}
+      <div className="flex justify-center items-center bg-background absolute bottom-0 left-0 right-0 p-2">
+        <TablePagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
+      </div>
     </div>
   );
 }
@@ -465,5 +504,96 @@ function DeleteDialog({ id, onDelete }: { id: string; onDelete: () => void }) {
         </DialogFooter>
       </DialogContent>
     </Dialog>
+  );
+}
+
+function TablePagination({
+  currentPage,
+  totalPages,
+  onPageChange,
+}: {
+  currentPage: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
+}) {
+  // 计算要显示的页码范围
+  const getPageNumbers = () => {
+    const pages = [];
+    // 最多显示5个页码
+    const maxPagesToShow = 5;
+
+    let startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
+    let endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
+
+    // 调整开始页码确保显示maxPagesToShow数量的页码
+    if (endPage - startPage + 1 < maxPagesToShow) {
+      startPage = Math.max(1, endPage - maxPagesToShow + 1);
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(i);
+    }
+
+    return pages;
+  };
+
+  return (
+    <Pagination>
+      <PaginationContent>
+        <PaginationItem>
+          <PaginationPrevious
+            onClick={() => currentPage > 1 && onPageChange(currentPage - 1)}
+            className={
+              currentPage <= 1
+                ? "pointer-events-none opacity-50"
+                : "cursor-pointer"
+            }
+            aria-disabled={currentPage <= 1}
+          />
+        </PaginationItem>
+
+        {getPageNumbers().map((page) => (
+          <PaginationItem key={page}>
+            <PaginationLink
+              onClick={() => onPageChange(page)}
+              isActive={page === currentPage}
+              className="cursor-pointer"
+            >
+              {page}
+            </PaginationLink>
+          </PaginationItem>
+        ))}
+
+        {totalPages > getPageNumbers()[getPageNumbers().length - 1] && (
+          <>
+            <PaginationItem>
+              <PaginationEllipsis />
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationLink
+                onClick={() => onPageChange(totalPages)}
+                className="cursor-pointer"
+              >
+                {totalPages}
+              </PaginationLink>
+            </PaginationItem>
+          </>
+        )}
+
+        <PaginationItem>
+          <PaginationNext
+            onClick={() =>
+              currentPage < totalPages && onPageChange(currentPage + 1)
+            }
+            className={
+              currentPage >= totalPages
+                ? "pointer-events-none opacity-50"
+                : "cursor-pointer"
+            }
+            aria-disabled={currentPage >= totalPages}
+          />
+        </PaginationItem>
+      </PaginationContent>
+    </Pagination>
   );
 }
