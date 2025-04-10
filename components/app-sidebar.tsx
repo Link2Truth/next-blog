@@ -45,12 +45,12 @@ const data = {
       items: [
         {
           title: "写文章",
-          url: "/dashboard/articles/create",
+          url: "/dashboard/articles",
           isActive: true,
         },
         {
           title: "所有文章",
-          url: "/dashboard/articles",
+          url: "/dashboard/articles/list",
         },
       ],
     },
